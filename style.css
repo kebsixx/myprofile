@@ -1,0 +1,480 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+:root {
+  --primary-color: #0095f6;
+  --secondary-color: #00376b;
+  --light-color: #fafafa;
+  --dark-color: #000000;
+  --border-color: #dbdbdb;
+  --text-primary: #262626;
+  --text-secondary: #737373;
+  --background: #ffffff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--background);
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+/* Header Navigation */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--background);
+  border-bottom: 1px solid var(--border-color);
+  z-index: 1000;
+  height: 60px;
+}
+
+.nav-container {
+  max-width: 975px;
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.nav-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  max-width: 300px;
+}
+
+.search-box {
+  position: relative;
+  width: 100%;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 8px 16px 8px 40px;
+  background: var(--light-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+.search-box i {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+}
+
+/* Main Content */
+.main-content {
+  margin-top: 80px;
+  padding: 0 20px;
+}
+
+.profile-container {
+  max-width: 935px;
+  margin: 0 auto;
+}
+
+/* Profile Header */
+.profile-header {
+  display: flex;
+  gap: 80px;
+  padding: 30px 4rem;
+}
+
+.profile-image-section {
+  flex-shrink: 0;
+}
+
+.profile-image-container {
+  width: 200px;
+  height: 200px;
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+}
+
+.profile-info-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.profile-top {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.profile-username {
+  font-size: 20px;
+  font-weight: normal;
+  color: var(--text-primary);
+}
+
+.profile-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: var(--primary-color);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #0081d6;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  background: var(--light-color);
+}
+
+.btn-icon {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.btn-icon:hover {
+  background: var(--light-color);
+}
+
+/* Profile Stats */
+.profile-stats {
+  display: flex;
+  gap: 40px;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.stat-number {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.stat-label {
+  font-size: 16px;
+  color: var(--text-secondary);
+}
+
+/* Profile Bio */
+.profile-bio {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.profile-title {
+  color: #737373;
+  font-weight: normal;
+  font-size: 14px;
+}
+
+.profile-contact,
+.profile-description {
+  font-size: 14px;
+  font-weight: normal;
+  color: var(--text-primary);
+}
+
+.profile-link {
+  color: var(--primary-color);
+  font-size: 14px;
+  font-style: italic;
+}
+
+/* Profile Hobbies Section */
+.profile-hobbies {
+  padding: 0 2rem;
+}
+
+.hobbies-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+}
+
+.hobbies-highlights {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.hobby-highlight {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 80px;
+  cursor: pointer;
+}
+
+.hobby-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.2;
+  border: 2px solid var(--border-color);
+  transition: all 0.2s ease;
+}
+
+.hobby-icon:hover {
+  transform: scale(1.05);
+  border-width: 3px;
+}
+
+.hobby-icon.coding {
+  background: #00376b;
+  color: white;
+  border-color: #00376b;
+}
+
+.hobby-icon.gaming {
+  background: white;
+  color: #0095f6;
+  border-color: #dbdbdb;
+}
+
+.hobby-icon.fitness {
+  background: white;
+  color: #ed4956;
+  border-color: #dbdbdb;
+}
+
+.hobby-icon.music {
+  background: white;
+  color: #262626;
+  border-color: #ed4956;
+  border-width: 3px;
+}
+
+.hobby-icon.reading {
+  background: white;
+  color: #262626;
+  border-color: #0095f6;
+  border-width: 3px;
+}
+
+.hobby-label {
+  font-size: 12px;
+  color: var(--text-primary);
+  text-align: center;
+  font-weight: 500;
+}
+
+/* Profile Tabs */
+.profile-tabs {
+  display: flex;
+  border-top: 1px solid var(--border-color);
+  margin-top: 30px;
+}
+
+.tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-top: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.tab.active {
+  color: var(--text-primary);
+  border-top-color: var(--text-primary);
+}
+
+.tab:hover {
+  color: var(--text-primary);
+}
+
+.tab i {
+  font-size: 12px;
+}
+
+/* Posts Grid */
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  margin-top: 30px;
+}
+
+.post-item {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.post-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: all 0.3s ease;
+}
+
+.post-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.post-item:hover .post-overlay {
+  opacity: 1;
+}
+
+.post-item:hover img {
+  transform: scale(1.05);
+}
+
+.post-stats {
+  display: flex;
+  gap: 20px;
+  color: white;
+  font-weight: 600;
+}
+
+.post-stats span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.post-stats i {
+  font-size: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .profile-header {
+    flex-direction: column;
+    gap: 30px;
+    text-align: center;
+  }
+
+  .profile-top {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .profile-stats {
+    justify-content: center;
+  }
+
+  .posts-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+  }
+
+  .nav-container {
+    padding: 0 16px;
+  }
+
+  .nav-center {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .posts-grid {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+
+  .profile-actions {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .hobbies-highlights {
+    gap: 15px;
+    padding: 0 10px;
+  }
+
+  .hobby-icon {
+    width: 70px;
+    height: 70px;
+    font-size: 8px;
+  }
+}
