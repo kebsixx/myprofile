@@ -52,16 +52,9 @@ body {
   color: var(--text-primary);
 }
 
-.nav-center {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  max-width: 300px;
-}
-
 .search-box {
   position: relative;
-  width: 100%;
+  width: 30%;
 }
 
 .search-box input {
@@ -127,7 +120,7 @@ body {
 .profile-top {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
 }
 
 .profile-username {
@@ -189,7 +182,7 @@ body {
 /* Profile Stats */
 .profile-stats {
   display: flex;
-  gap: 40px;
+  gap: 30px;
 }
 
 .stat-item {
@@ -245,27 +238,23 @@ body {
   padding: 0 2rem;
 }
 
-.hobbies-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 20px;
+.hobbies-highlights {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .hobbies-highlights {
   display: flex;
-  gap: 20px;
-  overflow-x: auto;
-  padding-bottom: 10px;
+  align-items: center;
+  flex-wrap: nowrap;
 }
 
 .hobby-highlight {
+  flex: 0 0 auto;
+  padding: 0 1rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  min-width: 80px;
-  cursor: pointer;
 }
 
 .hobby-icon {
@@ -285,38 +274,6 @@ body {
 
 .hobby-icon:hover {
   transform: scale(1.05);
-  border-width: 3px;
-}
-
-.hobby-icon.coding {
-  background: #00376b;
-  color: white;
-  border-color: #00376b;
-}
-
-.hobby-icon.gaming {
-  background: white;
-  color: #0095f6;
-  border-color: #dbdbdb;
-}
-
-.hobby-icon.fitness {
-  background: white;
-  color: #ed4956;
-  border-color: #dbdbdb;
-}
-
-.hobby-icon.music {
-  background: white;
-  color: #262626;
-  border-color: #ed4956;
-  border-width: 3px;
-}
-
-.hobby-icon.reading {
-  background: white;
-  color: #262626;
-  border-color: #0095f6;
   border-width: 3px;
 }
 
@@ -369,7 +326,6 @@ body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 28px;
-  margin-top: 30px;
 }
 
 .post-item {
@@ -377,6 +333,7 @@ body {
   aspect-ratio: 1;
   overflow: hidden;
   cursor: pointer;
+  width: 100%;
 }
 
 .post-item img {
@@ -427,32 +384,118 @@ body {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  .search-box {
+    width: 50%;
+  }
+
   .profile-header {
-    flex-direction: column;
-    gap: 30px;
-    text-align: center;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 16px;
+    text-align: left;
+    padding: 0;
+  }
+
+  .profile-image-container {
+    width: 30%;
+    height: auto;
+  }
+
+  .profile-info-section {
+    flex: 1;
   }
 
   .profile-top {
-    flex-direction: column;
-    gap: 16px;
+    gap: 12px;
+  }
+
+  .profile-username {
+    font-size: 18px;
   }
 
   .profile-stats {
-    justify-content: center;
+    width: 100%;
+    justify-content: space-between;
+    gap: 0;
   }
 
-  .posts-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2px;
+  .stat-item {
+    flex-direction: column;
   }
 
-  .nav-container {
-    padding: 0 16px;
+  .stat-number {
+    font-weight: 700;
   }
 
-  .nav-center {
+  .stat-number,
+  .stat-label {
+    font-size: 20px;
+  }
+
+  .profile-top .profile-actions {
     display: none;
+  }
+
+  .profile-actions-mobile {
+    display: flex;
+    justify-content: flex-start;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+
+  .profile-bio {
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  .profile-hobbies {
+    margin-top: 14px;
+    padding: 0;
+  }
+
+  .profile-tabs {
+    margin-top: 16px;
+  }
+
+  .hobbies-highlights {
+    gap: 1px;
+    padding: 0 6px;
+  }
+
+  .hobby-highlight {
+    padding: 0 0.25rem;
+  }
+
+  .hobby-icon {
+    width: 64px;
+    height: 64px;
+    font-size: 8px;
+  }
+
+  /* Force show mobile actions below bio */
+  .profile-actions-mobile {
+    display: flex !important;
+    width: 100%;
+    gap: 8px;
+    margin-top: 10px;
+    padding: 0;
+  }
+  .profile-actions-mobile .btn {
+    flex: 0 0 auto;
+  }
+
+  .profile-actions-mobile {
+    margin-top: 12px;
+    justify-content: space-between;
+  }
+  .profile-actions-mobile .btn-primary,
+  .profile-actions-mobile .btn-secondary {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .profile-actions-mobile .btn-icon {
+    flex: 0 0 44px;
   }
 }
 
@@ -460,6 +503,10 @@ body {
   .posts-grid {
     grid-template-columns: 1fr;
     gap: 2px;
+  }
+
+  .post-item {
+    width: 33%;
   }
 
   .profile-actions {
@@ -476,5 +523,29 @@ body {
     width: 70px;
     height: 70px;
     font-size: 8px;
+  }
+}
+
+/* Mobile-specific actions block (hidden by default) */
+.profile-actions-mobile {
+  display: none;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* Desktop vs Mobile bio visibility */
+.profile-bio-desktop {
+  display: block;
+}
+.profile-bio {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .profile-bio-desktop {
+    display: none;
+  }
+  .profile-bio {
+    display: block;
   }
 }

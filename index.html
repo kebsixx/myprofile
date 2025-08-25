@@ -18,11 +18,9 @@
         <div class="nav-left">
           <h1 class="logo">Profile</h1>
         </div>
-        <div class="nav-center">
-          <div class="search-box">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search" />
-          </div>
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search" />
         </div>
       </div>
     </header>
@@ -32,13 +30,11 @@
       <div class="profile-container">
         <!-- Profile Header -->
         <div class="profile-header">
-          <div class="profile-image-section">
-            <div class="profile-image-container">
-              <img
-                src="img/profile.JPG"
-                alt="Profile Image"
-                class="profile-image" />
-            </div>
+          <div class="profile-image-container">
+            <img
+              src="img/profile.JPG"
+              alt="Profile Image"
+              class="profile-image" />
           </div>
 
           <div class="profile-info-section">
@@ -66,7 +62,7 @@
                 <button class="btn btn-primary">Follow</button>
                 <button class="btn btn-secondary">Message</button>
                 <button class="btn btn-icon">
-                  <i class="fas fa-plus"></i>
+                  <i class="fas fa-user-plus"></i>
                 </button>
                 <button class="btn btn-icon">
                   <i class="fas fa-ellipsis-h"></i>
@@ -89,12 +85,13 @@
               </div>
             </div>
 
-            <div class="profile-bio">
+            <div class="profile-bio-desktop">
               <h3 class="profile-name">Muhammad Rizieq Anwar</h3>
               <h4 class="profile-title">Developer</h4>
               <p class="profile-description">
                 Mahasiswa Teknik Informatika Politeknik Elektronika Negeri
-                Surabaya. <br />
+                Surabaya.
+                <br />
                 Part of
                 <span style="font-weight: 600">@softdevpens</span>
               </p>
@@ -112,30 +109,77 @@
           </div>
         </div>
 
+        <!-- Bio and mobile actions -->
+        <div class="profile-bio">
+          <h3 class="profile-name">Muhammad Rizieq Anwar</h3>
+          <h4 class="profile-title">Developer</h4>
+          <p class="profile-description">
+            Mahasiswa Teknik Informatika Politeknik Elektronika Negeri Surabaya.
+            <br />
+            Part of
+            <span style="font-weight: 600">@softdevpens</span>
+          </p>
+          <p class="profile-contact">📩 zieqanw@outlook.com</p>
+          <p>
+            🔗
+            <a
+              href="https://github.com/kebsixx"
+              class="profile-link"
+              target="_blank"
+              >https://github.com/kebsixx</a
+            >
+          </p>
+        </div>
+
         <!-- Hobi Section -->
         <div class="profile-hobbies">
-          <div class="hobbies-highlights">
-            <div class="hobby-highlight">
-              <div class="hobby-icon coding">CODING<br />DEVELOPER</div>
+          <ul class="hobbies-highlights">
+            <li class="hobby-highlight">
+              <img
+                src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt="Programming"
+                class="hobby-icon" />
               <span class="hobby-label">Programming</span>
-            </div>
-            <div class="hobby-highlight">
-              <div class="hobby-icon gaming">GAMING<br />ENTERTAINMENT</div>
+            </li>
+            <li class="hobby-highlight">
+              <img
+                src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt="Gaming"
+                class="hobby-icon" />
               <span class="hobby-label">Gaming</span>
-            </div>
-            <div class="hobby-highlight">
-              <div class="hobby-icon fitness">FITNESS<br />HEALTH</div>
+            </li>
+            <li class="hobby-highlight">
+              <img
+                src="https://images.unsplash.com/photo-1549476464-37392f717541?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt="Fitness"
+                class="hobby-icon" />
               <span class="hobby-label">Olahraga</span>
-            </div>
-            <div class="hobby-highlight">
-              <div class="hobby-icon music">MUSIC<br />CREATIVE</div>
+            </li>
+            <li class="hobby-highlight">
+              <img
+                src="https://images.unsplash.com/photo-1675795921263-0781cdbedb64?q=80&w=750&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt="Music"
+                class="hobby-icon" />
               <span class="hobby-label">Music</span>
-            </div>
-            <div class="hobby-highlight">
-              <div class="hobby-icon reading">READING<br />KNOWLEDGE</div>
+            </li>
+            <li class="hobby-highlight">
+              <img
+                src="https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt="Reading"
+                class="hobby-icon" />
               <span class="hobby-label">Reading</span>
-            </div>
-          </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Mobile actions moved below hobbies -->
+        <div class="profile-actions-mobile">
+          <button class="btn btn-primary">Follow</button>
+          <button class="btn btn-secondary">Message</button>
+          <button class="btn btn-icon"><i class="fas fa-user-plus"></i></button>
+          <button class="btn btn-icon">
+            <i class="fas fa-ellipsis-h"></i>
+          </button>
         </div>
 
         <!-- Profile Tabs -->
