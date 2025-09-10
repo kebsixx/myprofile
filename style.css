@@ -239,6 +239,15 @@ a {
   font-style: italic;
 }
 
+.profile-audio {
+  width: 100%;
+  max-width: 400px;
+  height: 40px;
+  margin: 8px 0;
+  border-radius: 6px;
+  outline: none;
+}
+
 /* Profile Hobbies Section */
 .profile-hobbies {
   padding: 0 2rem;
