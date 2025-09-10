@@ -84,6 +84,7 @@ a {
 .main-content {
   margin-top: 80px;
   padding: 0 20px;
+  min-height: calc(100vh - 180px); /* Adjust for header and footer */
 }
 
 .profile-container {
@@ -385,6 +386,69 @@ a {
 
 .post-stats i {
   font-size: 16px;
+}
+
+/* Video Post Styles */
+.video-post {
+  position: relative;
+}
+
+.video-post .play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50px;
+  height: 50px;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.video-post .play-button i {
+  color: white;
+  font-size: 20px;
+  margin-left: 4px; /* Slight offset for play icon */
+}
+
+.video-post .video-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+}
+z .video-post:hover .play-button {
+  background: rgba(0, 0, 0, 0.9);
+  transform: translate(-50%, -50%) scale(1.1);
+  transition: all 0.3s ease;
+}
+
+.video-post .post-overlay {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Footer Styles */
+.footer {
+  margin-top: 60px;
+  padding: 20px 0;
+  border-top: 1px solid var(--border-color);
+  text-align: center;
+}
+
+.footer-content {
+  max-width: 935px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.footer p {
+  color: var(--text-secondary);
+  font-size: 12px;
 }
 
 /* Responsive Design */
