@@ -50,11 +50,11 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-black text-white font-inter">
       {/* Header */}
       <header className="sticky inset-x-0 top-0 z-50 h-16 bg-linear-to-t from-white/0 to-black backdrop-blur">
         <div className="mx-auto flex h-full max-w-243.75 items-center justify-between px-4">
-          <h1 className="text-xl font-semibold tracking-tight">
+          <h1 className="text-xl font-bold tracking-tight">
             {profile.username}
           </h1>
           <div className="flex justify-end items-center gap-3 min-w-45 max-w-[320px]">
@@ -102,9 +102,10 @@ export default function Home() {
           </div>
 
           <div className="mt-4">
-            <p className="text-sm text-zinc-500">{profile.title}</p>
-            <h3 className="text-sm font-semibold">{profile.name}</h3>
-            <p className="mt-1 text-sm text-white">{profile.description}</p>
+            <p className="text-sm text-zinc-400">{profile.title}</p>
+            <p className="mt-1 text-sm font-light text-white">
+              {profile.description}
+            </p>
             <p className="mt-1 text-sm text-white">📩 {profile.email}</p>
             <p className="mt-1 text-sm">
               🔗{" "}
@@ -112,7 +113,7 @@ export default function Home() {
                 href={profile.link}
                 target="_blank"
                 rel="noreferrer"
-                className="text-indigo-500 italic">
+                className="text-indigo-400 italic">
                 {profile.link}
               </a>
             </p>
@@ -126,7 +127,7 @@ export default function Home() {
               className="inline-flex flex-1 items-center justify-center rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0081d6]">
               Follow
             </a>
-            <button className="inline-flex flex-1 items-center justify-center rounded-lg bg-gray-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white hover:text-black">
+            <button className="inline-flex flex-1 items-center justify-center rounded-lg bg-gray-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-gray-800">
               Message
             </button>
           </div>
@@ -191,7 +192,7 @@ export default function Home() {
               </div>
             </div>
             <div className="mt-5">
-              <p className="text-sm text-zinc-500">{profile.title}</p>
+              <p className="text-sm text-zinc-400">{profile.title}</p>
               <h3 className="text-base font-semibold">{profile.name}</h3>
               <p className="mt-1 text-sm text-white">{profile.description}</p>
               <p className="mt-1 text-sm text-white">📩 {profile.email}</p>
@@ -211,7 +212,7 @@ export default function Home() {
 
         {/* Hobbies */}
         <section className="mt-6">
-          <ul className="no-scrollbar flex gap-4 overflow-x-auto px-4 py-2 md:gap-4 md:px-2">
+          <ul className="no-scrollbar flex gap-5 overflow-x-auto px-4 py-2 md:gap-6 md:px-2">
             {hobbies.map((hobby) => (
               <li key={hobby.label} className="shrink-0">
                 <div className="flex flex-col items-center gap-2">
@@ -240,7 +241,7 @@ export default function Home() {
             <button className="flex items-center justify-center gap-2 py-4 text-xs font-semibold tracking-widest text-white border-b-2 border-white">
               <LayoutGrid className="h-4 w-4" />
             </button>
-            <button className="flex items-center justify-center gap-2 border-b border-transparent py-4 text-xs font-semibold tracking-widest text-zinc-500 hover:text-white">
+            <button className="flex items-center justify-center gap-2 border-b border-transparent py-4 text-xs font-semibold tracking-widest text-zinc-500 hover:text-white hover:border-white">
               <Bookmark className="h-4 w-4" />
             </button>
           </div>
