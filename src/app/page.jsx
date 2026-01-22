@@ -1,13 +1,13 @@
+import { Icon } from "@iconify/react";
 import {
   Bookmark,
-  EllipsisVertical,
   Heart,
-  LayoutGrid,
   MessageCircle,
   MoreHorizontal,
   UserPlus,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   const profile = {
@@ -52,13 +52,16 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-black text-white font-inter">
       {/* Header */}
-      <header className="sticky inset-x-0 top-0 z-50 h-16 bg-linear-to-t from-white/0 to-black backdrop-blur">
-        <div className="mx-auto flex h-full max-w-243.75 items-center justify-between px-4">
-          <h1 className="text-xl font-bold tracking-tight">
-            {profile.username}
-          </h1>
-          <div className="flex justify-end items-center gap-3 min-w-45 max-w-[320px]">
-            <EllipsisVertical />
+      <header className="sticky inset-x-0 top-0 z-50 h-16">
+        <div className="relative h-full">
+          <div className="pointer-events-none absolute inset-0 ios-glass mask-fade-down" />
+          <div className="relative mx-auto flex h-full w-full max-w-243.75 items-center justify-between px-4">
+            <h1 className="text-xl font-bold tracking-tight">
+              {profile.username}
+            </h1>
+            <div className="bg-white/10 p-2 ring-1 ring-white/15 backdrop-blur-md rounded-full">
+              <Icon icon="solar:menu-dots-bold" width="24" height="24" />
+            </div>
           </div>
         </div>
       </header>
@@ -239,7 +242,7 @@ export default function Home() {
         <section>
           <div className="grid grid-cols-2">
             <button className="flex items-center justify-center gap-2 py-4 text-xs font-semibold tracking-widest text-white border-b-2 border-white">
-              <LayoutGrid className="h-4 w-4" />
+              <Icon icon="solar:widget-5-linear" width="20" height="20" />
             </button>
             <button className="flex items-center justify-center gap-2 border-b border-transparent py-4 text-xs font-semibold tracking-widest text-zinc-500 hover:text-white hover:border-white">
               <Bookmark className="h-4 w-4" />
@@ -247,14 +250,16 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Posts */}
+        {/* Projects */}
         <section>
           <div className="grid grid-cols-3">
-            {/* Image post */}
-            <div className="group relative aspect-square w-full overflow-hidden bg-zinc-100">
+            {/* Image project */}
+            <Link
+              href="/project"
+              className="group relative aspect-square w-full overflow-hidden bg-zinc-100">
               <Image
                 src="/img/profil.jpg"
-                alt="Post 1"
+                alt="Project 1"
                 className="h-full w-full object-cover transition group-hover:scale-[1.03]"
                 width={500}
                 height={500}
@@ -269,7 +274,7 @@ export default function Home() {
                   </span>
                 </div>
               </div>
-            </div>
+            </Link>
           </div>
         </section>
 
