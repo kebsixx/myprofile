@@ -130,9 +130,11 @@ export default function Home() {
               className="inline-flex flex-1 items-center justify-center rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0081d6]">
               Follow
             </a>
-            <button className="inline-flex flex-1 items-center justify-center rounded-lg bg-gray-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-gray-800">
-              Message
-            </button>
+            <Link
+              href="/messages"
+              className="inline-flex flex-1 items-center justify-center rounded-lg bg-gray-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-gray-800">
+              Messages
+            </Link>
           </div>
         </section>
 
@@ -163,9 +165,11 @@ export default function Home() {
                   className="inline-flex items-center justify-center rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-600">
                   Follow
                 </a>
-                <button className="inline-flex items-center justify-center rounded-lg bg-gray-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-gray-800">
-                  Message
-                </button>
+                <Link
+                  href="/messages"
+                  className="inline-flex items-center justify-center rounded-lg bg-gray-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-gray-800">
+                  Messages
+                </Link>
                 <button
                   className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-gray-700 text-white transition hover:bg-gray-800"
                   aria-label="Add friend">

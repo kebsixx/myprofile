@@ -12,7 +12,7 @@ export default function ProjectPage() {
       {/* Header */}
       <header className="sticky inset-x-0 top-0 z-50 h-16">
         {/* <div className="pointer-events-none inset-0 absolute h-full bg-linear-to-b from-black/75 from-50% via-black/40 via-70% to-black/0"></div> */}
-        <div className="pointer-events-none inset-0 absolute h-full bg-linear-to-b from-70% from-black to-black/0 opacity-10"></div>
+        <div className="pointer-events-none inset-0 absolute h-full bg-linear-to-b from-black/75 from-20% via-black/40 via-45% to-black/0 z-8"></div>
         <div className="pointer-events-none inset-0 absolute h-full backdrop-blur-lg fade-to-b z-9"></div>
         <div className="relative h-full z-10">
           <div className="relative mx-auto grid h-full max-w-283.75 grid-cols-3 items-center px-4">
@@ -53,7 +53,7 @@ export default function ProjectPage() {
           alt="Profile"
           width={192}
           height={192}
-          className="h-full w-full mx-auto object-cover opacity-70"
+          className="h-full w-full mx-auto object-cover"
         />
         <div className="my-3 flex items-center justify-between px-2">
           <div className="flex gap-4">
