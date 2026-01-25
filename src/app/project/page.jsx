@@ -11,15 +11,15 @@ export default function ProjectPage() {
     <div className="min-h-500 bg-black text-white">
       {/* Header */}
       <header className="sticky inset-x-0 top-0 z-50 h-16">
-        <div className="relative h-full">
-          {/* Gradient blur overlay */}
-          <div className="pointer-events-none absolute inset-0 ios-glass mask-fade-down" />
-
+        {/* <div className="pointer-events-none inset-0 absolute h-full bg-linear-to-b from-black/75 from-50% via-black/40 via-70% to-black/0"></div> */}
+        <div className="pointer-events-none inset-0 absolute h-full bg-linear-to-b from-70% from-black to-black/0 opacity-10"></div>
+        <div className="pointer-events-none inset-0 absolute h-full backdrop-blur-lg fade-to-b z-9"></div>
+        <div className="relative h-full z-10">
           <div className="relative mx-auto grid h-full max-w-283.75 grid-cols-3 items-center px-4">
             <Link
               href="/"
               aria-label="Back"
-              className="justify-self-start rounded-full bg-white/10 p-2 ring-1 ring-white/15 backdrop-blur-md">
+              className="justify-self-start rounded-full bg-white/10 p-2 ring-1 ring-white/15 backdrop-blur">
               <Icon icon="mingcute:left-fill" width="24" height="24" />
             </Link>
             <h1 className="justify-self-center text-xl font-black tracking-tight">
@@ -49,11 +49,11 @@ export default function ProjectPage() {
           <Icon icon="solar:menu-dots-bold" width="28" height="28"></Icon>
         </div>
         <Image
-          src="https://images.unsplash.com/vector-1738317129462-9ba78746ceb2?w=500&auto=format&fit=crop"
+          src="https://images.unsplash.com/photo-1483921020237-2ff51e8e4b22?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c25vd3xlbnwwfHwwfHx8Mg%3D%3D"
           alt="Profile"
           width={192}
           height={192}
-          className="h-full w-full mx-auto object-cover"
+          className="h-full w-full mx-auto object-cover opacity-70"
         />
         <div className="my-3 flex items-center justify-between px-2">
           <div className="flex gap-4">
