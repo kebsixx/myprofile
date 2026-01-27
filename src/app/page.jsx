@@ -1,8 +1,8 @@
-import { Icon } from "@iconify/react";
 import { Heart, MessageCircle, MoreHorizontal, UserPlus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import HomeTabs from "./HomeTabs";
+import HomeHeaderMenu from "./components/HomeHeaderMenu";
 import PublicChatPanel from "./components/PublicChatPanel";
 
 export default function Home() {
@@ -56,9 +56,7 @@ export default function Home() {
             <h1 className="text-xl font-bold tracking-tight">
               {profile.username}
             </h1>
-            <div className="bg-white/10 p-2 ring-1 ring-white/15 backdrop-blur-md rounded-full">
-              <Icon icon="solar:menu-dots-bold" width="24" height="24" />
-            </div>
+            <HomeHeaderMenu githubUrl={profile.link} />
           </div>
         </div>
       </header>
