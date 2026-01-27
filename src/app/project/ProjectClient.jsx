@@ -3,6 +3,7 @@
 import { Icon } from "@iconify/react";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
+import ProjectPostMenu from "./ProjectPostMenu";
 
 function useIsMobileViewport() {
   const [isMobile, setIsMobile] = useState(false);
@@ -74,9 +75,13 @@ export default function ProjectClient({ profile, projects }) {
       {projects.map((project, index) => {
         const isOpen = openCommentsForId === project.id;
         const isLiked = likedIds.has(project.id);
+        const projectAnchorId = `project-${project.id}`;
 
         return (
-          <section key={project.id} className="pt-4 md:pt-8">
+          <section
+            key={project.id}
+            id={projectAnchorId}
+            className="pt-4 md:pt-8">
             <div
               className={
                 "md:flex md:items-stretch md:justify-center " +
@@ -99,7 +104,13 @@ export default function ProjectClient({ profile, projects }) {
 
                   <div className="absolute inset-x-0 top-0 z-10 flex items-start justify-between gap-4 px-3 py-4 md:px-4">
                     <div className="flex min-w-0 items-center gap-3">
-                      <div className="h-9 w-9 shrink-0 rounded-full bg-white/10 ring-1 ring-white/10" />
+                      <Image
+                        src={profile.avatarSrc}
+                        alt="Profile"
+                        width={36}
+                        height={36}
+                        className="h-9 w-9 shrink-0 rounded-full"
+                      />
                       <div className="min-w-0">
                         <div className="truncate text-sm font-semibold leading-tight">
                           {profile.username}
@@ -110,16 +121,11 @@ export default function ProjectClient({ profile, projects }) {
                       </div>
                     </div>
 
-                    <button
-                      type="button"
-                      aria-label="More options"
-                      className="rounded-full bg-white/0 p-2 ring-1 ring-transparent transition hover:bg-white/10 hover:ring-white/15">
-                      <Icon
-                        icon="solar:menu-dots-bold"
-                        width="20"
-                        height="20"
-                      />
-                    </button>
+                    <ProjectPostMenu
+                      githubUrl={project.githubUrl}
+                      demoUrl={project.demoUrl}
+                      projectAnchorId={projectAnchorId}
+                    />
                   </div>
                 </div>
 
@@ -197,14 +203,7 @@ export default function ProjectClient({ profile, projects }) {
                       </button>
                     </div>
 
-                    <a
-                      href={project.githubUrl}
-                      aria-label="Open GitHub"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="shrink-0 rounded-full bg-white/0 p-1 ring-1 ring-transparent transition hover:bg-white/10 hover:ring-white/15">
-                      <Icon icon="mdi:github" width="32" height="32" />
-                    </a>
+                    <div className="shrink-0" />
                   </div>
                 </div>
               </article>

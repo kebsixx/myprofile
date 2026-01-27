@@ -13,6 +13,7 @@ const projects = [
     imageSrc: "https://images.unsplash.com/photo-1768772123991-b17e721119a7",
     date: "12 January 2025",
     description: "Desktop layout preview (testing).",
+    demoUrl: "",
     stats: {
       likes: 200,
       comments: 50,
@@ -46,6 +47,7 @@ const projects = [
     imageSrc: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
     date: "5 February 2024",
     description: "Mobile layout preview (testing).",
+    demoUrl: "",
     stats: {
       likes: 1500,
       comments: 300,
