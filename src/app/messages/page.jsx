@@ -1,12 +1,35 @@
+"use client";
+
 import { Icon } from "@iconify/react";
 import Link from "next/link";
+import { useCallback, useRef, useState } from "react";
+import ChatComposer from "../components/ChatComposer";
 
 export default function MessagesPage() {
+  const [messages, setMessages] = useState([]);
+  const scrollRef = useRef(null);
+
+  const handleSend = useCallback((text) => {
+    const newMessage = {
+      id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      text,
+      ts: Date.now(),
+    };
+
+    setMessages((prev) => [...prev, newMessage]);
+    requestAnimationFrame(() => {
+      const el = scrollRef.current;
+      if (el) el.scrollTop = el.scrollHeight;
+    });
+  }, []);
+
   return (
     <div className="h-dvh overflow-hidden bg-black text-white">
       <div className="flex h-full flex-col">
         {/* Scrollable content area */}
-        <div className="flex-1 overflow-y-auto overscroll-contain">
+        <div
+          ref={scrollRef}
+          className="no-scrollbar flex-1 overflow-y-auto overscroll-contain">
           {/* Header */}
           <header className="sticky inset-x-0 top-0 z-50 h-16">
             {/* <div className="pointer-events-none inset-0 absolute h-full bg-linear-to-b from-black/75 from-50% via-black/40 via-70% to-black/0"></div> */}
@@ -64,32 +87,27 @@ export default function MessagesPage() {
 
           {/* Messages Content */}
           <div className="relative z-10 p-4 pb-28">
-            <p className="text-center text-gray-500">No messages yet.</p>
+            {messages.length === 0 ? (
+              <p className="text-center text-gray-500">No messages yet.</p>
+            ) : (
+              <div className="mx-auto max-w-283.75">
+                <div className="flex flex-col gap-3">
+                  {messages.map((m) => (
+                    <div key={m.id} className="flex w-full justify-end">
+                      <div className="max-w-[85%] rounded-2xl rounded-br-md bg-indigo-500/20 ring-1 ring-indigo-400/20 px-3 py-2">
+                        <p className="text-sm text-white/90 whitespace-pre-wrap wrap-break-word">
+                          {m.text}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Chat text field (always visible, not affected by scroll/focus) */}
-        <div className="shrink-0 fixed inset-x-0 bottom-0 z-50 ">
-          <div className="relative">
-            <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/75 from-20% via-black/40 via-55% to-black/0" />
-            <div className="pointer-events-none absolute inset-0 backdrop-blur-xl fade-to-t" />
-
-            <div className="relative z-10 mx-auto max-w-283.75 px-4 pt-3 pb-[calc(env(safe-area-inset-bottom)+12px)]">
-              <form className="flex items-center gap-2">
-                <input
-                  type="text"
-                  placeholder="Type a message..."
-                  className="flex-1 rounded-full bg-white/10 backdrop-blur-xs px-4 py-2 text-white placeholder-white/60 outline-none focus:ring-2 focus:ring-white/30"
-                />
-                <button
-                  type="submit"
-                  className="rounded-full bg-indigo-500/90 p-2.5 font-semibold text-white ring-1 ring-white/10 backdrop-blur transition hover:bg-indigo-500">
-                  <Icon icon="solar:plain-3-linear" width="24" height="24" />
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
+        <ChatComposer onSend={handleSend} />
       </div>
     </div>
   );

@@ -1,13 +1,9 @@
 import { Icon } from "@iconify/react";
-import {
-  Bookmark,
-  Heart,
-  MessageCircle,
-  MoreHorizontal,
-  UserPlus,
-} from "lucide-react";
+import { Heart, MessageCircle, MoreHorizontal, UserPlus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import HomeTabs from "./HomeTabs";
+import PublicChatPanel from "./components/PublicChatPanel";
 
 export default function Home() {
   const profile = {
@@ -53,8 +49,9 @@ export default function Home() {
     <div className="min-h-screen bg-black text-white font-inter">
       {/* Header */}
       <header className="sticky inset-x-0 top-0 z-50 h-16">
-        <div className="relative h-full">
-          <div className="pointer-events-none absolute inset-0 ios-glass mask-fade-down" />
+        <div className="pointer-events-none inset-0 absolute h-full bg-linear-to-b from-black/75 from-20% via-black/40 via-45% to-black/0 z-8"></div>
+        <div className="pointer-events-none inset-0 absolute h-full backdrop-blur-lg fade-to-b z-9"></div>
+        <div className="relative h-full z-10">
           <div className="relative mx-auto flex h-full w-full max-w-243.75 items-center justify-between px-4">
             <h1 className="text-xl font-bold tracking-tight">
               {profile.username}
@@ -242,45 +239,36 @@ export default function Home() {
           </ul>
         </section>
 
-        {/* Tabs */}
-        <section>
-          <div className="grid grid-cols-2">
-            <button className="flex items-center justify-center gap-2 py-4 text-xs font-semibold tracking-widest text-white border-b-2 border-white">
-              <Icon icon="solar:widget-5-linear" width="20" height="20" />
-            </button>
-            <button className="flex items-center justify-center gap-2 border-b border-transparent py-4 text-xs font-semibold tracking-widest text-zinc-500 hover:text-white hover:border-white">
-              <Bookmark className="h-4 w-4" />
-            </button>
-          </div>
-        </section>
-
-        {/* Projects */}
-        <section>
-          <div className="grid grid-cols-3">
-            {/* Image project */}
-            <Link
-              href="/project"
-              className="group relative aspect-square w-full overflow-hidden bg-zinc-100">
-              <Image
-                src="/img/profil.jpg"
-                alt="Project 1"
-                className="h-full w-full object-cover transition group-hover:scale-[1.03]"
-                width={500}
-                height={500}
-              />
-              <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition group-hover:opacity-100">
-                <div className="flex gap-6 text-sm font-semibold text-white">
-                  <span className="inline-flex items-center gap-2">
-                    <Heart className="h-4 w-4" /> 24
-                  </span>
-                  <span className="inline-flex items-center gap-2">
-                    <MessageCircle className="h-4 w-4" /> 3
-                  </span>
-                </div>
+        <HomeTabs
+          projectsSlot={
+            <section>
+              <div className="grid grid-cols-3">
+                <Link
+                  href="/project"
+                  className="group relative aspect-square w-full overflow-hidden bg-zinc-100">
+                  <Image
+                    src="https://images.unsplash.com/photo-1768291424878-3dbd4118d23d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw3fHx8ZW58MHx8fHx8"
+                    alt="Project 1"
+                    className="h-full w-full object-cover transition group-hover:scale-[1.03]"
+                    width={500}
+                    height={500}
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition group-hover:opacity-100">
+                    <div className="flex gap-6 text-sm font-semibold text-white">
+                      <span className="inline-flex items-center gap-2">
+                        <Heart className="h-4 w-4" /> 24
+                      </span>
+                      <span className="inline-flex items-center gap-2">
+                        <MessageCircle className="h-4 w-4" /> 3
+                      </span>
+                    </div>
+                  </div>
+                </Link>
               </div>
-            </Link>
-          </div>
-        </section>
+            </section>
+          }
+          roomSlot={<PublicChatPanel />}
+        />
 
         {/* Footer */}
         <footer className="mt-14 border-t border-zinc-200 py-6 text-center">
