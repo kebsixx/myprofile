@@ -124,7 +124,7 @@ export default function Home() {
               href="https://www.instagram.com/cml6awvx/"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex flex-1 items-center justify-center rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0081d6]">
+              className="inline-flex flex-1 items-center justify-center rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-600">
               Follow
             </a>
             <Link
