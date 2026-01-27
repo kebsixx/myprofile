@@ -2,6 +2,7 @@ import { Heart, MessageCircle, MoreHorizontal, UserPlus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import HomeTabs from "./HomeTabs";
+import CopyToClipboardButton from "./components/CopyToClipboardButton";
 import HomeHeaderMenu from "./components/HomeHeaderMenu";
 import PublicChatPanel from "./components/PublicChatPanel";
 
@@ -104,7 +105,13 @@ export default function Home() {
             <p className="mt-1 text-sm font-light text-white">
               {profile.description}
             </p>
-            <p className="mt-1 text-sm text-white">📩 {profile.email}</p>
+            <div className="mt-1 flex items-center gap-2 text-sm text-white">
+              <span>📩 {profile.email}</span>
+              <CopyToClipboardButton
+                value={profile.email}
+                ariaLabel="Copy email"
+              />
+            </div>
             <p className="mt-1 text-sm">
               🔗{" "}
               <a
@@ -197,7 +204,13 @@ export default function Home() {
               <p className="text-sm text-zinc-400">{profile.title}</p>
               <h3 className="text-base font-semibold">{profile.name}</h3>
               <p className="mt-1 text-sm text-white">{profile.description}</p>
-              <p className="mt-1 text-sm text-white">📩 {profile.email}</p>
+              <div className="mt-1 flex items-center gap-2 text-sm text-white">
+                <span>📩 {profile.email}</span>
+                <CopyToClipboardButton
+                  value={profile.email}
+                  ariaLabel="Copy email"
+                />
+              </div>
               <p className="mt-1 text-sm">
                 🔗{" "}
                 <a

@@ -7,6 +7,7 @@ export default function HomeHeaderMenu({ githubUrl }) {
   const [open, setOpen] = useState(false);
   const [themeLabel, setThemeLabel] = useState("Dark mode");
   const panelRef = useRef(null);
+  const cvUrl = "/cv.pdf";
 
   const close = useCallback(() => setOpen(false), []);
   const toggle = useCallback(() => setOpen((v) => !v), []);
@@ -97,6 +98,22 @@ export default function HomeHeaderMenu({ githubUrl }) {
                       width="20"
                       height="18"
                     />
+                  </a>
+
+                  <a
+                    href={cvUrl}
+                    download
+                    onClick={close}
+                    className="flex w-full items-center justify-between rounded-xl px-3 py-2 text-sm text-white hover:bg-white/10">
+                    <span className="inline-flex items-center gap-2">
+                      <Icon
+                        icon="solar:document-linear"
+                        width="20"
+                        height="20"
+                      />
+                      Download CV
+                    </span>
+                    <Icon icon="solar:download-linear" width="20" height="18" />
                   </a>
                 </div>
               </div>
