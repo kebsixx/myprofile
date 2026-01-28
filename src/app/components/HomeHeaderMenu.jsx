@@ -2,6 +2,7 @@
 
 import { Icon } from "@iconify/react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import ContactMenu from "./ContactMenu";
 
 export default function HomeHeaderMenu({ githubUrl }) {
   const [open, setOpen] = useState(false);
@@ -92,6 +93,13 @@ export default function HomeHeaderMenu({ githubUrl }) {
               <div className="pointer-events-none absolute inset-0 bg-white/10" />
 
               <div className="relative p-1.5">
+                <div className="flex justify-center mb-2">
+                  <ContactMenu
+                    variant="icon"
+                    buttonClassName="bg-transparent p-1 hover:bg-white/10"
+                    iconClassName="w-6 h-6"
+                  />
+                </div>
                 <div className="grid gap-2">
                   <button
                     type="button"

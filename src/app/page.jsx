@@ -2,6 +2,7 @@ import { Icon } from "@iconify/react";
 import Image from "next/image";
 import Link from "next/link";
 import projects from "../data/projects";
+import ContactMenu from "./components/ContactMenu";
 import CopyToClipboardButton from "./components/CopyToClipboardButton";
 import HomeHeaderMenu from "./components/HomeHeaderMenu";
 import HomeTabs from "./components/HomeTabs";
@@ -58,7 +59,10 @@ export default function Home() {
             <h1 className="text-xl font-bold tracking-tight">
               {profile.username}
             </h1>
-            <HomeHeaderMenu githubUrl={profile.link} />
+            <div className="flex items-center gap-2">
+              <ContactMenu variant="icon" />
+              <HomeHeaderMenu githubUrl={profile.link} />
+            </div>
           </div>
         </div>
       </header>
@@ -130,20 +134,16 @@ export default function Home() {
               href="https://www.instagram.com/cml6awvx/"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex flex-1 gap-2 items-center justify-center rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-600">
+              className="inline-flex flex-1 gap-2 items-center justify-center rounded-lg bg-indigo-500 px-1 py-2 text-sm font-semibold text-white transition hover:bg-indigo-600">
               <Icon icon="mdi:instagram" width="20" height="20" />
               Follow
             </a>
-            <Link
-              href="/messages"
-              className="inline-flex flex-1 gap-2 items-center justify-center rounded-lg bg-gray-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-gray-800">
-              <Icon
-                icon="solar:chat-round-line-linear"
-                width="20"
-                height="20"
-              />
-              Messages
-            </Link>
+            <ContactMenu
+              label="Messages"
+              iconClassName="w-5 h-5"
+              wrapperClassName="flex-1"
+              buttonClassName="w-full inline-flex gap-2 items-center justify-center rounded-lg bg-gray-700 py-2 text-sm font-semibold text-white transition hover:bg-gray-800"
+            />
           </div>
         </section>
 
@@ -174,11 +174,7 @@ export default function Home() {
                   className="inline-flex items-center justify-center rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-600">
                   Follow
                 </a>
-                <Link
-                  href="/messages"
-                  className="inline-flex items-center justify-center rounded-lg bg-gray-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-gray-800">
-                  Messages
-                </Link>
+                <ContactMenu label="Messages" />
               </div>
             </div>
 
@@ -294,7 +290,7 @@ export default function Home() {
         {/* Footer */}
         <footer className="mt-14 border-t border-zinc-200 py-6 text-center">
           <p className="text-xs text-zinc-500">
-            © 2024 MyProfile. All rights reserved.
+            © 2026 MyInsta. All rights reserved.
           </p>
         </footer>
       </main>
