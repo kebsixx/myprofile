@@ -7,10 +7,31 @@ export default function HomeHeaderMenu({ githubUrl }) {
   const [open, setOpen] = useState(false);
   const [themeLabel, setThemeLabel] = useState("Dark mode");
   const panelRef = useRef(null);
+  const buttonRef = useRef(null);
+  const [menuCoords, setMenuCoords] = useState({ left: 0, top: 0 });
   const cvUrl = "/cv.pdf";
 
   const close = useCallback(() => setOpen(false), []);
-  const toggle = useCallback(() => setOpen((v) => !v), []);
+  const placeMenu = useCallback(() => {
+    const btn = buttonRef.current;
+    if (!btn) return;
+    const rect = btn.getBoundingClientRect();
+    // Align right edge of menu to right edge of button
+    const menuWidth = 192; // w-48
+    const left = Math.round(rect.right - menuWidth);
+    const top = Math.round(rect.bottom + 8); // 8px gap
+    setMenuCoords({ left: Math.max(left, 8), top });
+  }, []);
+
+  const toggle = useCallback(() => {
+    setOpen((v) => {
+      const next = !v;
+      if (next) {
+        requestAnimationFrame(placeMenu);
+      }
+      return next;
+    });
+  }, [placeMenu]);
 
   useEffect(() => {
     if (!open) return;
@@ -18,10 +39,17 @@ export default function HomeHeaderMenu({ githubUrl }) {
     const onKeyDown = (e) => {
       if (e.key === "Escape") close();
     };
+    const onReflow = () => placeMenu();
 
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [close, open]);
+    window.addEventListener("resize", onReflow);
+    window.addEventListener("scroll", onReflow, true);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("resize", onReflow);
+      window.removeEventListener("scroll", onReflow, true);
+    };
+  }, [close, open, placeMenu]);
 
   useEffect(() => {
     if (!open) return;
@@ -35,12 +63,13 @@ export default function HomeHeaderMenu({ githubUrl }) {
   return (
     <>
       <button
+        ref={buttonRef}
         type="button"
         onClick={toggle}
         className="bg-white/10 p-2 backdrop-blur-md rounded-full hover:bg-white/15"
         aria-label="Open menu"
         aria-expanded={open}>
-        <Icon icon="solar:menu-dots-bold" width="24" height="24" />
+        <Icon icon="solar:list-linear" hFlip width="24" height="24" />
       </button>
 
       {open ? (
@@ -52,7 +81,9 @@ export default function HomeHeaderMenu({ githubUrl }) {
             onClick={close}
           />
 
-          <div className="absolute right-4 top-16 mt-2 w-48">
+          <div
+            className="fixed z-50 w-48"
+            style={{ left: menuCoords.left, top: menuCoords.top }}>
             <div
               ref={panelRef}
               className="overflow-hidden rounded-2xl bg-black/10 backdrop-blur-md"
