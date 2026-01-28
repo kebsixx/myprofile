@@ -25,7 +25,7 @@ export default function HomeTabs({ projectsSlot, roomSlot }) {
           }
           aria-pressed={isProjects}>
           <Icon icon="solar:widget-5-linear" width="20" height="20" />
-          Projects
+          <span className="hidden md:block">Projects</span>
         </button>
 
         <button
@@ -38,7 +38,7 @@ export default function HomeTabs({ projectsSlot, roomSlot }) {
           }
           aria-pressed={!isProjects}>
           <Icon icon="solar:dialog-linear" width="20" height="20" />
-          Public Chat
+          <span className="hidden md:block">Public Chat</span>
         </button>
       </div>
 

@@ -1,9 +1,9 @@
-import { Heart, MessageCircle, MoreHorizontal, UserPlus } from "lucide-react";
+import { Icon } from "@iconify/react";
 import Image from "next/image";
 import Link from "next/link";
-import HomeTabs from "./HomeTabs";
 import CopyToClipboardButton from "./components/CopyToClipboardButton";
 import HomeHeaderMenu from "./components/HomeHeaderMenu";
+import HomeTabs from "./components/HomeTabs";
 import PublicChatPanel from "./components/PublicChatPanel";
 
 export default function Home() {
@@ -129,12 +129,18 @@ export default function Home() {
               href="https://www.instagram.com/cml6awvx/"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex flex-1 items-center justify-center rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-600">
+              className="inline-flex flex-1 gap-2 items-center justify-center rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-600">
+              <Icon icon="mdi:instagram" width="20" height="20" />
               Follow
             </a>
             <Link
               href="/messages"
-              className="inline-flex flex-1 items-center justify-center rounded-lg bg-gray-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-gray-800">
+              className="inline-flex flex-1 gap-2 items-center justify-center rounded-lg bg-gray-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-gray-800">
+              <Icon
+                icon="solar:chat-round-line-linear"
+                width="20"
+                height="20"
+              />
               Messages
             </Link>
           </div>
@@ -172,16 +178,6 @@ export default function Home() {
                   className="inline-flex items-center justify-center rounded-lg bg-gray-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-gray-800">
                   Messages
                 </Link>
-                <button
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-gray-700 text-white transition hover:bg-gray-800"
-                  aria-label="Add friend">
-                  <UserPlus className="h-4 w-4" />
-                </button>
-                <button
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-gray-700 text-white transition hover:bg-gray-800"
-                  aria-label="More">
-                  <MoreHorizontal className="h-4 w-4" />
-                </button>
               </div>
             </div>
 
@@ -267,10 +263,20 @@ export default function Home() {
                   <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition group-hover:opacity-100">
                     <div className="flex gap-6 text-sm font-semibold text-white">
                       <span className="inline-flex items-center gap-2">
-                        <Heart className="h-4 w-4" /> 24
+                        <Icon
+                          icon="solar:heart-linear"
+                          width="20"
+                          height="20"
+                        />{" "}
+                        24
                       </span>
                       <span className="inline-flex items-center gap-2">
-                        <MessageCircle className="h-4 w-4" /> 3
+                        <Icon
+                          icon="solar:chat-round-outline"
+                          width="20"
+                          height="20"
+                        />{" "}
+                        3
                       </span>
                     </div>
                   </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { Icon } from "@iconify/react";
+import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ChatComposer from "./ChatComposer";
 import AuthStubInline from "./auth/AuthStubInline";
@@ -108,8 +109,8 @@ export default function PublicChatPanel({
           <div
             className={
               mine
-                ? "max-w-[85%] rounded-2xl rounded-br-md bg-zinc-800/80 ring-1 ring-white/10 px-3 py-2"
-                : "max-w-[85%] rounded-2xl rounded-bl-md bg-zinc-800/60 ring-1 ring-white/10 px-3 py-2"
+                ? "max-w-[85%] rounded-2xl rounded-br-none bg-zinc-800/80 ring-1 ring-white/10 px-3 py-2"
+                : "max-w-[85%] rounded-2xl rounded-bl-none bg-zinc-800/60 ring-1 ring-white/10 px-3 py-2"
             }>
             <div className="flex items-baseline justify-between gap-3">
               <p className="text-xs font-semibold text-white/90">{m.name}</p>
@@ -125,20 +126,10 @@ export default function PublicChatPanel({
   }, [messages, nickname]);
 
   return (
-    <section className="px-4 py-4 md:px-2">
+    <section className="px-4 py-4 md:px-2 relative">
       <div
-        className={`relative isolate overflow-hidden rounded-2xl ring-1 ring-white/10 ${heightClassName}`}>
-        <div className="pointer-events-none absolute inset-0 -z-10">
-          <img
-            src="/img/wallpaper.jpg"
-            alt=""
-            aria-hidden="true"
-            className="h-full w-full object-cover"
-            draggable={false}
-          />
-          <div className="absolute inset-0 bg-black/25" />
-        </div>
-
+        className={`relative isolate rounded-2xl ring-1 ring-white/10 bg-black/30 backdrop-blur-sm ${heightClassName}`}
+        style={{ zIndex: 1 }}>
         {/* Header */}
         <div className="absolute inset-x-0 top-0 z-20">
           <div className="relative h-14">
@@ -207,14 +198,31 @@ export default function PublicChatPanel({
         {/* Messages (scrolls under header/composer) */}
         <div
           ref={scrollRef}
-          className="no-scrollbar absolute inset-0 z-10 overflow-y-auto overscroll-contain px-4 pt-18 pb-32">
-          {messages.length === 0 ? (
-            <p className="text-center text-sm text-white/40">
-              No messages yet. Say hi 👋
-            </p>
-          ) : (
-            <div className="flex flex-col gap-3">{renderedMessages}</div>
-          )}
+          className="no-scrollbar absolute inset-0 z-10 overflow-y-auto overscroll-contain px-4 pt-18 pb-32"
+          style={{ WebkitOverflowScrolling: "touch" }}>
+          {/* Wallpaper background for chat area only */}
+          <div className="pointer-events-none absolute inset-0 z-0">
+            <Image
+              src="/img/wallpaper.jpg"
+              alt="Wallpaper background"
+              aria-hidden="true"
+              className="h-full w-full object-cover"
+              draggable={false}
+              width={1920}
+              height={1080}
+              priority
+            />
+            <div className="absolute inset-0 bg-black/25" />
+          </div>
+          <div className="relative z-10">
+            {messages.length === 0 ? (
+              <p className="text-center text-sm text-white/40">
+                No messages yet. Say hi 👋
+              </p>
+            ) : (
+              <div className="flex flex-col gap-3">{renderedMessages}</div>
+            )}
+          </div>
         </div>
 
         {/* Composer (overlays like header) */}
@@ -232,7 +240,9 @@ export default function PublicChatPanel({
       </div>
 
       <p className="mt-3 text-center text-xs text-white/35">
-        Local demo (saved on this device only).
+        Inspired by{" "}
+        <span className="font-semibold text-white">@satriabaharii</span> Chat
+        Room
       </p>
 
       {isAuthOpen ? (

@@ -69,7 +69,7 @@ export default function HomeHeaderMenu({ githubUrl }) {
         className="bg-white/10 p-2 backdrop-blur-md rounded-full hover:bg-white/15"
         aria-label="Open menu"
         aria-expanded={open}>
-        <Icon icon="solar:list-linear" hFlip width="24" height="24" />
+        <Icon icon="solar:menu-dots-bold" width="24" height="24" />
       </button>
 
       {open ? (
