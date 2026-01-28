@@ -1,6 +1,7 @@
 import { Icon } from "@iconify/react";
 import Image from "next/image";
 import Link from "next/link";
+import projects from "../data/projects";
 import CopyToClipboardButton from "./components/CopyToClipboardButton";
 import HomeHeaderMenu from "./components/HomeHeaderMenu";
 import HomeTabs from "./components/HomeTabs";
@@ -250,37 +251,40 @@ export default function Home() {
           projectsSlot={
             <section>
               <div className="grid grid-cols-3">
-                <Link
-                  href="/project"
-                  className="group relative aspect-square w-full overflow-hidden bg-zinc-100">
-                  <Image
-                    src="https://images.unsplash.com/photo-1768291424878-3dbd4118d23d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw3fHx8ZW58MHx8fHx8"
-                    alt="Project 1"
-                    className="h-full w-full object-cover transition group-hover:scale-[1.03]"
-                    width={500}
-                    height={500}
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition group-hover:opacity-100">
-                    <div className="flex gap-6 text-sm font-semibold text-white">
-                      <span className="inline-flex items-center gap-2">
-                        <Icon
-                          icon="solar:heart-linear"
-                          width="20"
-                          height="20"
-                        />{" "}
-                        24
-                      </span>
-                      <span className="inline-flex items-center gap-2">
-                        <Icon
-                          icon="solar:chat-round-outline"
-                          width="20"
-                          height="20"
-                        />{" "}
-                        3
-                      </span>
+                {projects.map((project) => (
+                  <Link
+                    key={project.id}
+                    href={"/project?id=" + project.id}
+                    className="group relative aspect-square w-full overflow-hidden bg-zinc-100">
+                    <Image
+                      src={project.imageSrc}
+                      alt={project.title}
+                      className="h-full w-full object-cover transition group-hover:scale-[1.03]"
+                      width={500}
+                      height={500}
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition group-hover:opacity-100">
+                      <div className="flex gap-6 text-sm font-semibold text-white">
+                        <span className="inline-flex items-center gap-2">
+                          <Icon
+                            icon="solar:heart-linear"
+                            width="20"
+                            height="20"
+                          />{" "}
+                          {project.stats.likes}
+                        </span>
+                        <span className="inline-flex items-center gap-2">
+                          <Icon
+                            icon="solar:chat-round-outline"
+                            width="20"
+                            height="20"
+                          />{" "}
+                          {project.stats.comments}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                </Link>
+                  </Link>
+                ))}
               </div>
             </section>
           }

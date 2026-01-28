@@ -1,5 +1,10 @@
+"use client";
+
 import { Icon } from "@iconify/react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import projects from "../../data/projects";
 import ProjectClient from "./ProjectClient";
 
 const profile = {
@@ -7,72 +12,19 @@ const profile = {
   avatarSrc: "/img/profil.jpg",
 };
 
-const projects = [
-  {
-    id: "p1",
-    imageSrc: "https://images.unsplash.com/photo-1768772123991-b17e721119a7",
-    date: "12 January 2025",
-    description: "Desktop layout preview (testing).",
-    demoUrl: "",
-    stats: {
-      likes: 200,
-      comments: 50,
-      reposts: 20,
-      shares: 3,
-    },
-    comments: [
-      {
-        id: "c1",
-        user: "alvin",
-        text: "Keren banget, vibe-nya dapet.",
-        date: "2h",
-      },
-      {
-        id: "c2",
-        user: "naya",
-        text: "Ini pake apa buat UI blur-nya?",
-        date: "1h",
-      },
-      {
-        id: "c3",
-        user: "raka",
-        text: "Mantap, lanjutkan!",
-        date: "15m",
-      },
-    ],
-    githubUrl: "https://github.com/kebsixx",
-  },
-  {
-    id: "p2",
-    imageSrc: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
-    date: "5 February 2024",
-    description: "Mobile layout preview (testing).",
-    demoUrl: "",
-    stats: {
-      likes: 1500,
-      comments: 300,
-      reposts: 120,
-      shares: 30,
-    },
-    comments: [
-      {
-        id: "c1",
-        user: "dina",
-        text: "Warnanya enak dilihat.",
-        date: "1d",
-      },
-      {
-        id: "c2",
-        user: "bimo",
-        text: "Boleh share repo nya?",
-        date: "20h",
-      },
-    ],
-    githubUrl: "https://github.com/kebsixx",
-  },
-];
-
 export default function ProjectPage() {
+  const searchParams = useSearchParams();
+  const scrollId = searchParams.get("id");
+
+  useEffect(() => {
+    if (scrollId) {
+      const el = document.getElementById(`project-${scrollId}`);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
+  }, [scrollId]);
+
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Header */}
@@ -91,10 +43,16 @@ export default function ProjectPage() {
             <h1 className="justify-self-center text-xl font-black tracking-tight">
               Projects
             </h1>
-            <div />
           </div>
         </div>
       </header>
+      {/*
+        Cara kerja:
+        - Di halaman Home, link ke /project?id=p2 (misal)
+        - Di halaman Project, ambil id dari query string
+        - Saat komponen mount, scroll ke elemen dengan id "project-p2"
+        - Pastikan setiap section project punya id="project-<id>"
+      */}
       <ProjectClient profile={profile} projects={projects} />
     </div>
   );

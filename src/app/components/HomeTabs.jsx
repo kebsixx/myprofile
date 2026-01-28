@@ -14,7 +14,7 @@ export default function HomeTabs({ projectsSlot, roomSlot }) {
 
   return (
     <section>
-      <div className="grid grid-cols-2">
+      <div className="grid grid-cols-3">
         <button
           type="button"
           onClick={() => handleTabChange("projects")}
@@ -39,6 +39,13 @@ export default function HomeTabs({ projectsSlot, roomSlot }) {
           aria-pressed={!isProjects}>
           <Icon icon="solar:dialog-linear" width="20" height="20" />
           <span className="hidden md:block">Public Chat</span>
+        </button>
+
+        <button
+          type="button"
+          className="flex items-center justify-center gap-2 border-b border-transparent py-4 text-xs font-semibold tracking-widest text-zinc-500 hover:text-white hover:border-white">
+          <Icon icon="solar:medal-ribbon-star-linear" width="20" height="20" />
+          <span className="hidden md:block">Achievements</span>
         </button>
       </div>
 
