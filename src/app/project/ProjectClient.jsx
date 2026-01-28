@@ -34,6 +34,7 @@ export default function ProjectClient({ profile, projects }) {
   const [openCommentsForId, setOpenCommentsForId] = useState(null);
   const [likedIds, setLikedIds] = useState(() => new Set());
   const isMobileViewport = useIsMobileViewport();
+  const [repostingIds, setRepostingIds] = useState(() => new Set());
 
   const activeProject = useMemo(() => {
     if (!openCommentsForId) return null;
@@ -70,11 +71,22 @@ export default function ProjectClient({ profile, projects }) {
     });
   }
 
+  // Toggle repost state for a project (add/remove projectId from repostingIds)
+  function toggleRepost(projectId) {
+    setRepostingIds((current) => {
+      const next = new Set(current);
+      if (next.has(projectId)) next.delete(projectId);
+      else next.add(projectId);
+      return next;
+    });
+  }
+
   return (
     <main className="mx-auto w-full max-w-md px-4 pb-10 md:max-w-6xl">
       {projects.map((project, index) => {
         const isOpen = openCommentsForId === project.id;
         const isLiked = likedIds.has(project.id);
+        const isReposting = repostingIds.has(project.id);
         const projectAnchorId = `project-${project.id}`;
 
         return (
@@ -181,13 +193,21 @@ export default function ProjectClient({ profile, projects }) {
                       <button
                         type="button"
                         aria-label="Repost"
+                        onClick={() => toggleRepost(project.id)}
                         className="flex items-center gap-1 rounded-full px-2 py-1.5 hover:bg-white/10">
-                        <Icon icon="solar:repeat-bold" width="24" height="24" />
+                        <Icon
+                          icon={
+                            isReposting
+                              ? "solar:repeat-one-minimalistic-bold"
+                              : "solar:repeat-linear"
+                          }
+                          width="24"
+                          height="24"
+                        />
                         <p className="text-sm font-semibold max-[400px]:text-xs">
                           {formatCount(project.stats.reposts)}
                         </p>
                       </button>
-
                       <button
                         type="button"
                         aria-label="Share"

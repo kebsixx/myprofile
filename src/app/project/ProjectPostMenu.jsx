@@ -122,7 +122,7 @@ export default function ProjectPostMenu({
             style={{ left: coords.left, top: coords.top }}>
             <div
               ref={panelRef}
-              className="w-48 overflow-hidden rounded-2xl bg-black/10 backdrop-blur-md"
+              className="w-48 overflow-hidden rounded-2xl bg-black/60 backdrop-blur-md"
               role="dialog"
               aria-label="Post menu">
               <div className="pointer-events-none absolute inset-0 bg-white/10" />
