@@ -60,7 +60,6 @@ export default function Home() {
               {profile.username}
             </h1>
             <div className="flex items-center gap-2">
-              <ContactMenu variant="icon" />
               <HomeHeaderMenu githubUrl={profile.link} />
             </div>
           </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { Icon } from "@iconify/react";
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 function clamp(value, min, max) {
@@ -121,26 +122,22 @@ export default function ContactMenu({
                 <div className="pointer-events-none absolute inset-0 bg-white/10" />
                 <div className="relative p-1.5">
                   <div className="grid gap-2">
-                    <a
-                      href="https://t.me/yourusername"
+                    <Link
+                      href="https://t.me/surekind"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-white hover:bg-white/10">
-                      <Icon
-                        icon="ic:baseline-telegram"
-                        width="20"
-                        height="20"
-                      />{" "}
+                      <Icon icon="lineicons:telegram" width="20" height="20" />{" "}
                       Telegram
-                    </a>
+                    </Link>
                     <a
-                      href="mailto:youremail@example.com"
+                      href="mailto:surekind@protonmail.com"
                       className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-white hover:bg-white/10">
-                      <Icon icon="ic:baseline-email" width="20" height="20" />{" "}
+                      <Icon icon="ic:outline-email" width="20" height="20" />{" "}
                       Email
                     </a>
                     <a
-                      href="https://wa.me/yourwhatsappnumber"
+                      href="https://wa.me/6285175280571"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-white hover:bg-white/10">

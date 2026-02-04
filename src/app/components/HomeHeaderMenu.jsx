@@ -17,10 +17,9 @@ export default function HomeHeaderMenu({ githubUrl }) {
     const btn = buttonRef.current;
     if (!btn) return;
     const rect = btn.getBoundingClientRect();
-    // Align right edge of menu to right edge of button
-    const menuWidth = 192; // w-48
+    const menuWidth = 192;
     const left = Math.round(rect.right - menuWidth);
-    const top = Math.round(rect.bottom + 8); // 8px gap
+    const top = Math.round(rect.bottom + 8);
     setMenuCoords({ left: Math.max(left, 8), top });
   }, []);
 
@@ -54,7 +53,7 @@ export default function HomeHeaderMenu({ githubUrl }) {
 
   useEffect(() => {
     if (!open) return;
-    // focus first interactive element for keyboard users
+
     requestAnimationFrame(() => {
       const el = panelRef.current?.querySelector("a,button");
       el?.focus?.();
@@ -93,13 +92,6 @@ export default function HomeHeaderMenu({ githubUrl }) {
               <div className="pointer-events-none absolute inset-0 bg-white/10" />
 
               <div className="relative p-1.5">
-                <div className="flex justify-center mb-2">
-                  <ContactMenu
-                    variant="icon"
-                    buttonClassName="bg-transparent p-1 hover:bg-white/10"
-                    iconClassName="w-6 h-6"
-                  />
-                </div>
                 <div className="grid gap-2">
                   <button
                     type="button"
