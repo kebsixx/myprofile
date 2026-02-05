@@ -23,13 +23,16 @@ function formatTime(ts) {
 export default function PublicChatPanel({
   heightClassName = "h-[70dvh] md:h-[520px]",
 }) {
-  const { handle, isAuthed, signOut } = useAuthStub();
+  const { handle, isAuthed, user } = useAuthStub();
 
   const [messages, setMessages] = useState([]);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const scrollRef = useRef(null);
 
-  const nickname = (handle || "").trim();
+  // Prioritaskan user.username jika ada (tidak peduli provider), baru fallback ke handle
+  const nickname = user?.username
+    ? user.username.trim()
+    : (handle || "").trim();
   const canChat = isAuthed && nickname.length > 0;
 
   const scrollToBottom = useCallback(() => {
@@ -74,18 +77,6 @@ export default function PublicChatPanel({
     },
     [canChat, nickname, scrollToBottom],
   );
-
-  const clearChat = useCallback(() => {
-    const ok = window.confirm("Clear chat history?");
-    if (!ok) return;
-
-    setMessages([]);
-    try {
-      localStorage.removeItem(STORAGE_KEY_MESSAGES);
-    } catch {
-      // ignore
-    }
-  }, []);
 
   const requestAuth = useCallback(() => {
     setIsAuthOpen(true);
@@ -157,39 +148,6 @@ export default function PublicChatPanel({
                     height="18"
                   />
                 </button>
-
-                {isAuthed ? (
-                  <button
-                    type="button"
-                    onClick={signOut}
-                    className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/15 backdrop-blur hover:bg-white/15"
-                    aria-label="Sign out"
-                    title="Sign out">
-                    <Icon icon="solar:logout-2-linear" width="18" height="18" />
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={requestAuth}
-                    className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/15 backdrop-blur hover:bg-white/15"
-                    aria-label="Sign in"
-                    title="Sign in">
-                    <Icon icon="solar:login-2-linear" width="18" height="18" />
-                  </button>
-                )}
-
-                <button
-                  type="button"
-                  onClick={clearChat}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/15 backdrop-blur hover:bg-white/15"
-                  aria-label="Clear chat"
-                  title="Clear chat">
-                  <Icon
-                    icon="solar:trash-bin-trash-linear"
-                    width="18"
-                    height="18"
-                  />
-                </button>
               </div>
             </div>
           </div>
@@ -198,10 +156,10 @@ export default function PublicChatPanel({
         {/* Messages (scrolls under header/composer) */}
         <div
           ref={scrollRef}
-          className="no-scrollbar absolute inset-0 z-10 overflow-y-auto overscroll-contain px-4 pt-18 pb-32"
+          className="no-scrollbar absolute inset-0 z-10 overflow-y-auto overscroll-contain px-4 py-18"
           style={{ WebkitOverflowScrolling: "touch" }}>
-          {/* Wallpaper background for chat area only */}
-          <div className="pointer-events-none absolute inset-0 z-0">
+          {/* Wallpaper background for chat area only - FIXED position */}
+          <div className="pointer-events-none fixed inset-0 z-0">
             <Image
               src="/img/wallpaper.jpg"
               alt="Wallpaper background"

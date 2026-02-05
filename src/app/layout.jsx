@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import { AuthStubProvider } from "./components/auth/AuthStubProvider";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 
 const inter = Inter({
@@ -27,7 +28,9 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased`}>
-        <AuthStubProvider>{children}</AuthStubProvider>
+        <AuthStubProvider>
+          <TooltipProvider>{children}</TooltipProvider>
+        </AuthStubProvider>
       </body>
     </html>
   );

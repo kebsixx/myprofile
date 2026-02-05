@@ -1,0 +1,1 @@
+Backup of src/components/component-example.tsx before deletion.

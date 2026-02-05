@@ -1,0 +1,1 @@
+Backup of src/components/ui/badge.tsx before deletion.

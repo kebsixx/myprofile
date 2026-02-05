@@ -8,6 +8,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { createClient } from "@supabase/supabase-js";
 
 const STORAGE_KEY_AUTH_USER = "myinsta:auth:user";
 
@@ -27,71 +28,130 @@ function deriveHandle(user) {
 
 const AuthStubContext = createContext(null);
 
+// Inisialisasi Supabase client
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+);
+
 export function AuthStubProvider({ children }) {
   const [user, setUser] = useState(null);
 
+  // Listen ke Supabase auth state changes
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY_AUTH_USER);
-      if (!saved) return;
-      setUser(JSON.parse(saved));
-    } catch {
-      // ignore
-    }
-  }, []);
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        const supabaseUser = session.user;
 
-  const setAndPersist = useCallback((nextUser) => {
-    setUser(nextUser);
-    try {
-      if (nextUser) {
-        localStorage.setItem(STORAGE_KEY_AUTH_USER, JSON.stringify(nextUser));
-      } else {
-        localStorage.removeItem(STORAGE_KEY_AUTH_USER);
+        // Prioritaskan username GitHub jika ada (dari user_name atau preferred_username)
+        // Bahkan jika provider tercatat sebagai Google
+        const githubUsername =
+          supabaseUser.user_metadata?.user_name ||
+          supabaseUser.user_metadata?.preferred_username;
+
+        const username =
+          githubUsername ||
+          supabaseUser.user_metadata?.full_name ||
+          supabaseUser.user_metadata?.name ||
+          supabaseUser.email;
+
+        setUser({
+          id: supabaseUser.id,
+          email: supabaseUser.email,
+          provider: supabaseUser.app_metadata?.provider || "email",
+          username: username,
+        });
       }
-    } catch {
-      // ignore
-    }
+    });
+
+    // Listen for auth changes (login/logout/token refresh)
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        const supabaseUser = session.user;
+
+        // Prioritaskan username GitHub jika ada (dari user_name atau preferred_username)
+        // Bahkan jika provider tercatat sebagai Google
+        const githubUsername =
+          supabaseUser.user_metadata?.user_name ||
+          supabaseUser.user_metadata?.preferred_username;
+
+        const username =
+          githubUsername ||
+          supabaseUser.user_metadata?.full_name ||
+          supabaseUser.user_metadata?.name ||
+          supabaseUser.email;
+
+        setUser({
+          id: supabaseUser.id,
+          email: supabaseUser.email,
+          provider: supabaseUser.app_metadata?.provider || "email",
+          username: username,
+        });
+      } else {
+        setUser(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
-  const signInEmail = useCallback(
-    (email) => {
-      const next = {
-        provider: "email",
-        email: (email || "").trim(),
-      };
-      setAndPersist(next);
-      return next;
-    },
-    [setAndPersist],
-  );
+  // Login dengan email (magic link)
+  const signInEmail = useCallback(async (email) => {
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        emailRedirectTo: `${window.location.origin}/`,
+      },
+    });
+    if (error) {
+      alert(`Error: ${error.message}`);
+      return null;
+    }
+    alert("Check your email for the login link!");
+    return { provider: "email", email };
+  }, []);
 
-  const signInGoogle = useCallback(
-    (email) => {
-      const next = {
-        provider: "google",
-        email: (email || "").trim(),
-      };
-      setAndPersist(next);
-      return next;
-    },
-    [setAndPersist],
-  );
+  // Login dengan Google
+  const signInGoogle = useCallback(async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/`,
+      },
+    });
+    if (error) {
+      alert(`Error: ${error.message}`);
+      return null;
+    }
+    return { provider: "google" };
+  }, []);
 
-  const signInGithub = useCallback(
-    (username) => {
-      const next = {
-        provider: "github",
-        username: (username || "").trim(),
-      };
-      setAndPersist(next);
-      return next;
-    },
-    [setAndPersist],
-  );
+  // Login dengan GitHub
+  const signInGithub = useCallback(async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "github",
+      options: {
+        redirectTo: `${window.location.origin}/`,
+        skipBrowserRedirect: false,
+      },
+    });
+    if (error) {
+      alert(`Error: ${error.message}`);
+      return null;
+    }
+    return { provider: "github" };
+  }, []);
 
-  const signOut = useCallback(() => {
-    setAndPersist(null);
-  }, [setAndPersist]);
+  const signOut = useCallback(async () => {
+    const confirmed = window.confirm("Are you sure you want to log out?");
+    if (!confirmed) return;
+
+    await supabase.auth.signOut();
+    setUser(null);
+  }, []);
 
   const value = useMemo(() => {
     const handle = deriveHandle(user);
