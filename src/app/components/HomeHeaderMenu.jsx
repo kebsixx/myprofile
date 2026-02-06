@@ -2,6 +2,7 @@
 
 import { Icon } from "@iconify/react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
@@ -75,14 +76,14 @@ export default function HomeHeaderMenu({ githubUrl }) {
         {/* Login/Signout icon (leftmost) */}
         {isAuthed ? (
           <Tooltip>
-            <TooltipTrigger>
-              <button
+            <TooltipTrigger asChild>
+              <Button
                 type="button"
                 onClick={signOut}
                 className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/15 backdrop-blur hover:bg-white/15"
                 aria-label="Sign out">
                 <Icon icon="solar:logout-2-linear" width="20" height="20" />
-              </button>
+              </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom" align="center">
               Sign out
@@ -90,14 +91,14 @@ export default function HomeHeaderMenu({ githubUrl }) {
           </Tooltip>
         ) : (
           <Tooltip>
-            <TooltipTrigger>
-              <button
+            <TooltipTrigger asChild>
+              <Button
                 type="button"
                 onClick={() => setIsAuthOpen(true)}
                 className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/15 backdrop-blur hover:bg-white/15"
                 aria-label="Sign in">
                 <Icon icon="solar:login-2-linear" width="20" height="20" />
-              </button>
+              </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom" align="center">
               Sign in to chat
@@ -107,8 +108,8 @@ export default function HomeHeaderMenu({ githubUrl }) {
 
         {/* Main menu button (right of login icon) */}
         <Tooltip>
-          <TooltipTrigger>
-            <button
+          <TooltipTrigger asChild>
+            <Button
               ref={buttonRef}
               type="button"
               onClick={toggle}
@@ -116,7 +117,7 @@ export default function HomeHeaderMenu({ githubUrl }) {
               aria-label="Open menu"
               aria-expanded={open}>
               <Icon icon="solar:menu-dots-bold" width="24" height="24" />
-            </button>
+            </Button>
           </TooltipTrigger>
           <TooltipContent side="bottom" align="center">
             Open menu

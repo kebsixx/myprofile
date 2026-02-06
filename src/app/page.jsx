@@ -7,6 +7,11 @@ import CopyToClipboardButton from "./components/CopyToClipboardButton";
 import HomeHeaderMenu from "./components/HomeHeaderMenu";
 import HomeTabs from "./components/HomeTabs";
 import PublicChatPanel from "./components/PublicChatPanel";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "../components/ui/tooltip";
 
 export default function Home() {
   const profile = {
@@ -116,16 +121,6 @@ export default function Home() {
                 ariaLabel="Copy email"
               />
             </div>
-            <p className="mt-1 text-sm">
-              🔗{" "}
-              <a
-                href={profile.link}
-                target="_blank"
-                rel="noreferrer"
-                className="text-indigo-400 italic">
-                {profile.link}
-              </a>
-            </p>
           </div>
 
           <div className="mt-4 flex gap-2">
@@ -166,13 +161,20 @@ export default function Home() {
               <h2 className="text-xl font-normal">{profile.username}</h2>
 
               <div className="ml-1 flex flex-wrap items-center gap-2">
-                <a
-                  href="https://www.instagram.com/cml6awvx/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center justify-center rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-600">
-                  Follow
-                </a>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <a
+                      href="https://www.instagram.com/cml6awvx/"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center justify-center rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-600">
+                      Follow
+                    </a>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" align="center">
+                    Follow me on Instagram
+                  </TooltipContent>
+                </Tooltip>
                 <ContactMenu label="Messages" />
               </div>
             </div>
@@ -203,16 +205,6 @@ export default function Home() {
                   ariaLabel="Copy email"
                 />
               </div>
-              <p className="mt-1 text-sm">
-                🔗{" "}
-                <a
-                  href={profile.link}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-indigo-500 italic">
-                  {profile.link}
-                </a>
-              </p>
             </div>
           </div>
         </section>

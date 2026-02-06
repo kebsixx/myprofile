@@ -3,6 +3,11 @@
 import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
@@ -71,38 +76,45 @@ export default function ContactMenu({
   return (
     <>
       <div className={"relative " + wrapperClassName}>
-        <button
-          ref={buttonRef}
-          type="button"
-          aria-label="Contact options"
-          onClick={openMenu}
-          className={
-            (variant === "icon"
-              ? "rounded-full bg-white/10 backdrop-blur-md p-2 transition hover:bg-white/10 hover:ring-white/15 "
-              : "rounded-lg bg-gray-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-gray-800 ") +
-            buttonClassName
-          }>
-          {variant === "icon" ? (
-            <Icon
-              icon="solar:chat-round-line-linear"
-              width="22"
-              height="22"
-              className={iconClassName}
-            />
-          ) : (
-            <span className="inline-flex items-center gap-2 text-sm font-semibold">
-              {iconClassName ? (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button
+              ref={buttonRef}
+              type="button"
+              aria-label="Contact options"
+              onClick={openMenu}
+              className={
+                (variant === "icon"
+                  ? "rounded-full bg-white/10 backdrop-blur-md p-2 transition hover:bg-white/10 hover:ring-white/15 "
+                  : "rounded-lg bg-gray-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-gray-800 ") +
+                buttonClassName
+              }>
+              {variant === "icon" ? (
                 <Icon
                   icon="solar:chat-round-line-linear"
-                  width="20"
-                  height="20"
+                  width="22"
+                  height="22"
                   className={iconClassName}
                 />
-              ) : null}
-              {label}
-            </span>
-          )}
-        </button>
+              ) : (
+                <span className="inline-flex items-center gap-2 text-sm font-semibold">
+                  {iconClassName ? (
+                    <Icon
+                      icon="solar:chat-round-line-linear"
+                      width="20"
+                      height="20"
+                      className={iconClassName}
+                    />
+                  ) : null}
+                  {label}
+                </span>
+              )}
+            </button>
+          </TooltipTrigger>
+          <TooltipContent side="top" align="center">
+            Contact Me
+          </TooltipContent>
+        </Tooltip>
         {open ? (
           <div className="fixed inset-0 z-60">
             <button

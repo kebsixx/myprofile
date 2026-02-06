@@ -32,7 +32,7 @@ export default function CopyToClipboardButton({
 
   return (
     <Tooltip>
-      <TooltipTrigger>
+      <TooltipTrigger asChild>
         <button
           type="button"
           onClick={onCopy}
@@ -48,7 +48,7 @@ export default function CopyToClipboardButton({
           />
         </button>
       </TooltipTrigger>
-      <TooltipContent side="bottom" align="center">
+      <TooltipContent side="right" align="center">
         {copied ? "Copied" : ariaLabel}
       </TooltipContent>
     </Tooltip>
