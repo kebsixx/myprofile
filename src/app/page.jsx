@@ -171,7 +171,7 @@ export default function Home() {
                       Follow
                     </a>
                   </TooltipTrigger>
-                  <TooltipContent side="bottom" align="center">
+                  <TooltipContent side="top" align="center">
                     Follow me on Instagram
                   </TooltipContent>
                 </Tooltip>

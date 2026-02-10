@@ -3,12 +3,7 @@
 import { Icon } from "@iconify/react";
 import { useCallback, useEffect, useState } from "react";
 import { useAuthStub } from "./auth/AuthStubProvider";
-import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-);
+import supabase from "../../utils/supabase/browserClient";
 
 function formatTime(timestamp) {
   try {

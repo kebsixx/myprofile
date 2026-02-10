@@ -1,37 +1,83 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { createClient } from "../../utils/supabase/server";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import AdminClient from "./AdminClient";
-import React from "react";
+import supabase from "../../utils/supabase/browserClient";
+import { useAuthStub } from "../components/auth/AuthStubProvider";
 
-export default async function AdminPage() {
-  const supabase = createClient(cookies());
-  const { data: sessionData } = await supabase.auth.getSession();
-  const session = sessionData?.session;
+export default function AdminPage() {
+  const { user, isAuthed } = useAuthStub();
+  const [isAdmin, setIsAdmin] = useState(null);
+  const [loading, setLoading] = useState(false);
+  // use shared browser client
 
-  console.log("User session:", session);
+  useEffect(() => {
+    let mounted = true;
+    async function checkAdmin() {
+      if (!isAuthed || !user) {
+        setIsAdmin(false);
+        return;
+      }
+      setLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("is_admin")
+          .eq("id", user.id)
+          .single();
+        if (!mounted) return;
+        if (error) {
+          console.error("Admin check error:", error);
+          setIsAdmin(false);
+        } else {
+          setIsAdmin(Boolean(data?.is_admin));
+        }
+      } catch (e) {
+        console.error(e);
+        setIsAdmin(false);
+      } finally {
+        setLoading(false);
+      }
+    }
+    checkAdmin();
+    return () => {
+      mounted = false;
+    };
+  }, [isAuthed, user]);
 
-  if (!session) {
-    // not logged in
-    redirect("/");
+  if (!isAuthed) {
+    return (
+      <main style={{ padding: 24 }}>
+        <h1>Admin</h1>
+        <p>You must be logged in to access the admin dashboard.</p>
+      </main>
+    );
   }
 
-  const { data: profile, error } = await supabase
-    .from("profiles")
-    .select("is_admin")
-    .eq("id", session.user.id)
-    .single();
+  if (loading || isAdmin === null) {
+    return (
+      <main style={{ padding: 24 }}>
+        <h1>Admin</h1>
+        <p>Checking permissions…</p>
+      </main>
+    );
+  }
 
-  if (error || !profile?.is_admin) {
-    // not authorized
-    redirect("/");
+  if (!isAdmin) {
+    return (
+      <main style={{ padding: 24 }}>
+        <h1>Not authorized</h1>
+        <p>Your account is not an admin.</p>
+        <p>User ID: {user?.id}</p>
+      </main>
+    );
   }
 
   return (
     <main style={{ padding: 24 }}>
       <h1>Admin Dashboard</h1>
-      <p>Welcome, {session.user.email}</p>
-      <p>User ID: {session.user.id}</p>
+      <p>Welcome, {user?.email}</p>
+      <p>User ID: {user?.id}</p>
       <AdminClient />
     </main>
   );

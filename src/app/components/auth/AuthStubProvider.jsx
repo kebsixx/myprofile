@@ -8,7 +8,8 @@ import {
   useMemo,
   useState,
 } from "react";
-import { createClient } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
+import supabase from "../../../utils/supabase/browserClient";
 
 const STORAGE_KEY_AUTH_USER = "myinsta:auth:user";
 
@@ -29,23 +30,19 @@ function deriveHandle(user) {
 const AuthStubContext = createContext(null);
 
 // Inisialisasi Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-);
+// using shared browser Supabase client from utils
 
 export function AuthStubProvider({ children }) {
   const [user, setUser] = useState(null);
+  const router = useRouter();
 
   // Listen ke Supabase auth state changes
   useEffect(() => {
-    // Get initial session
+    // Get initial session (do not auto-redirect here). We only set local user state.
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
         const supabaseUser = session.user;
 
-        // Prioritaskan username GitHub jika ada (dari user_name atau preferred_username)
-        // Bahkan jika provider tercatat sebagai Google
         const githubUsername =
           supabaseUser.user_metadata?.user_name ||
           supabaseUser.user_metadata?.preferred_username;
@@ -68,12 +65,10 @@ export function AuthStubProvider({ children }) {
     // Listen for auth changes (login/logout/token refresh)
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (session?.user) {
         const supabaseUser = session.user;
 
-        // Prioritaskan username GitHub jika ada (dari user_name atau preferred_username)
-        // Bahkan jika provider tercatat sebagai Google
         const githubUsername =
           supabaseUser.user_metadata?.user_name ||
           supabaseUser.user_metadata?.preferred_username;
@@ -90,6 +85,16 @@ export function AuthStubProvider({ children }) {
           provider: supabaseUser.app_metadata?.provider || "email",
           username: username,
         });
+
+        // On explicit sign-in, always send users to home ('/').
+        // Use replace to clean OAuth hash from URL.
+        if (event === "SIGNED_IN") {
+          try {
+            if (typeof window !== "undefined") router.replace("/");
+          } catch (e) {
+            /* ignore router errors */
+          }
+        }
       } else {
         setUser(null);
       }
@@ -149,9 +154,19 @@ export function AuthStubProvider({ children }) {
     const confirmed = window.confirm("Are you sure you want to log out?");
     if (!confirmed) return;
 
-    await supabase.auth.signOut();
+    try {
+      await supabase.auth.signOut();
+    } catch (e) {
+      console.error("Error signing out:", e);
+    }
     setUser(null);
-  }, []);
+    try {
+      // after sign out, send user to home to avoid exposing admin URL
+      if (typeof window !== "undefined") router.replace("/");
+    } catch (e) {
+      /* ignore */
+    }
+  }, [router]);
 
   const value = useMemo(() => {
     const handle = deriveHandle(user);

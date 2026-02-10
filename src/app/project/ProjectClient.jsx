@@ -4,13 +4,10 @@ import { Icon } from "@iconify/react";
 import Image from "next/image";
 import { useEffect, useMemo, useState, useCallback } from "react";
 import ProjectPostMenu from "./ProjectPostMenu";
-import { createClient } from "@supabase/supabase-js";
+import supabase from "../../utils/supabase/browserClient";
 import { useAuthStub } from "../components/auth/AuthStubProvider";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-);
+// shared browser client imported above
 
 function useIsMobileViewport() {
   const [isMobile, setIsMobile] = useState(false);

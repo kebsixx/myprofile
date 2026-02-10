@@ -111,7 +111,7 @@ export default function ContactMenu({
               )}
             </button>
           </TooltipTrigger>
-          <TooltipContent side="top" align="center">
+          <TooltipContent side="right" align="center">
             Contact Me
           </TooltipContent>
         </Tooltip>
