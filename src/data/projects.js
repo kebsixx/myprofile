@@ -1,6 +1,6 @@
 const projects = [
   {
-    id: 1,
+    id: "00000000-0000-0000-0000-000000000001",
     title: "Project 1",
     imageSrc: "https://images.unsplash.com/photo-1768772123991-b17e721119a7",
     githubUrl: "https://github.com/username/project1",
@@ -14,7 +14,7 @@ const projects = [
     ],
   },
   {
-    id: 2,
+    id: "00000000-0000-0000-0000-000000000002",
     title: "Project 2",
     imageSrc: "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
     githubUrl: "https://github.com/username/project2",
@@ -25,7 +25,7 @@ const projects = [
     comments: [],
   },
   {
-    id: 3,
+    id: "00000000-0000-0000-0000-000000000003",
     title: "Project 3",
     imageSrc:
       "https://images.unsplash.com/photo-1768291424878-3dbd4118d23d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw3fHx8ZW58MHx8fHx8",
