@@ -29,6 +29,11 @@ import {
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   ImageIcon,
   Loader2,
   Pencil,
@@ -45,6 +50,9 @@ type Project = {
   title: string;
   description?: string | null;
   image_src?: string | null;
+  github_url?: string | null;
+  demo_url?: string | null;
+  date?: string | null;
   created_at?: string;
 };
 
@@ -57,6 +65,9 @@ export default function AdminClient() {
     title: "",
     description: "",
     image_src: "",
+    github_url: "",
+    demo_url: "",
+    date: "",
   });
   const [submitting, setSubmitting] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -94,7 +105,14 @@ export default function AdminClient() {
 
   function openCreateDialog() {
     setEditingProject(null);
-    setFormData({ title: "", description: "", image_src: "" });
+    setFormData({
+      title: "",
+      description: "",
+      image_src: "",
+      github_url: "",
+      demo_url: "",
+      date: "",
+    });
     setUploadError(null);
     setDialogOpen(true);
   }
@@ -105,6 +123,9 @@ export default function AdminClient() {
       title: project.title,
       description: project.description || "",
       image_src: project.image_src || "",
+      github_url: project.github_url || "",
+      demo_url: project.demo_url || "",
+      date: project.date || "",
     });
     setUploadError(null);
     setDialogOpen(true);
@@ -218,7 +239,14 @@ export default function AdminClient() {
       }
 
       setDialogOpen(false);
-      setFormData({ title: "", description: "", image_src: "" });
+      setFormData({
+        title: "",
+        description: "",
+        image_src: "",
+        github_url: "",
+        demo_url: "",
+        date: "",
+      });
       await fetchProjects();
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Unknown error";
@@ -297,6 +325,41 @@ export default function AdminClient() {
                     }
                     placeholder="A brief description of the project..."
                     rows={4}
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="github_url">GitHub URL (optional)</Label>
+                  <Input
+                    id="github_url"
+                    type="url"
+                    value={formData.github_url}
+                    onChange={(e) =>
+                      setFormData({ ...formData, github_url: e.target.value })
+                    }
+                    placeholder="https://github.com/username/repo"
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="demo_url">Demo URL (optional)</Label>
+                  <Input
+                    id="demo_url"
+                    type="url"
+                    value={formData.demo_url}
+                    onChange={(e) =>
+                      setFormData({ ...formData, demo_url: e.target.value })
+                    }
+                    placeholder="https://example.com"
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="date">Date (optional)</Label>
+                  <Input
+                    id="date"
+                    type="date"
+                    value={formData.date}
+                    onChange={(e) =>
+                      setFormData({ ...formData, date: e.target.value })
+                    }
                   />
                 </div>
                 <div className="grid gap-2">
@@ -470,7 +533,10 @@ export default function AdminClient() {
                 <TableRow>
                   <TableHead>Title</TableHead>
                   <TableHead>Description</TableHead>
-                  <TableHead>Image</TableHead>
+                  <TableHead>Preview</TableHead>
+                  <TableHead>GitHub</TableHead>
+                  <TableHead>Demo</TableHead>
+                  <TableHead>Date</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -488,26 +554,90 @@ export default function AdminClient() {
                       )}
                     </TableCell>
                     <TableCell>
-                      {project.image_src ? (
-                        <Badge variant="secondary">Has Image</Badge>
+                      {project.image_src &&
+                      isValidImageUrl(project.image_src) ? (
+                        <div className="relative w-auto h-20 rounded-md overflow-hidden border border-border">
+                          <Image
+                            src={project.image_src}
+                            alt={project.title}
+                            fill
+                            className="object-cover hover:opacity-75 transition-opacity cursor-pointer"
+                            onClick={() =>
+                              window.open(project.image_src, "_blank")
+                            }
+                          />
+                        </div>
                       ) : (
                         <Badge variant="outline">No Image</Badge>
                       )}
                     </TableCell>
+                    <TableCell>
+                      {project.github_url ? (
+                        <a
+                          href={project.github_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-500 hover:underline">
+                          <Badge variant="secondary" className="cursor-pointer">
+                            GitHub
+                          </Badge>
+                        </a>
+                      ) : (
+                        <Badge variant="outline">—</Badge>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {project.demo_url ? (
+                        <a
+                          href={project.demo_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-500 hover:underline">
+                          <Badge variant="secondary" className="cursor-pointer">
+                            Live
+                          </Badge>
+                        </a>
+                      ) : (
+                        <Badge variant="outline">—</Badge>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground">
+                      {project.date
+                        ? new Date(project.date).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          })
+                        : "—"}
+                    </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Button
-                          variant="outline"
-                          size="icon-sm"
-                          onClick={() => openEditDialog(project)}>
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="destructive"
-                          size="icon-sm"
-                          onClick={() => handleDelete(project.id)}>
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="outline"
+                              size="icon-sm"
+                              onClick={() => openEditDialog(project)}>
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Edit Project</p>
+                          </TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="destructive"
+                              size="icon-sm"
+                              onClick={() => handleDelete(project.id)}>
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Delete Project</p>
+                          </TooltipContent>
+                        </Tooltip>
                       </div>
                     </TableCell>
                   </TableRow>
