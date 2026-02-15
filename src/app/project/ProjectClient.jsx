@@ -2,10 +2,11 @@
 
 import { Icon } from "@iconify/react";
 import Image from "next/image";
-import { useEffect, useMemo, useState, useCallback } from "react";
-import ProjectPostMenu from "./ProjectPostMenu";
+import { useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import supabase from "../../utils/supabase/browserClient";
 import { useAuthStub } from "../components/auth/AuthStubProvider";
+import ProjectPostMenu from "./ProjectPostMenu";
 
 // shared browser client imported above
 
@@ -55,6 +56,22 @@ function formatTime(timestamp) {
 }
 
 export default function ProjectClient({ profile, projects }) {
+  // handle scroll-to via query param (client-only)
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    const scrollId = searchParams?.get("id");
+    if (scrollId) {
+      const el = document.getElementById(`project-${scrollId}`);
+      if (el) {
+        // small timeout to ensure layout is ready
+        setTimeout(
+          () => el.scrollIntoView({ behavior: "smooth", block: "center" }),
+          50,
+        );
+      }
+    }
+  }, [searchParams]);
+
   const { user, isAuthed } = useAuthStub();
   const [openCommentsForId, setOpenCommentsForId] = useState(null);
   const [likedIds, setLikedIds] = useState(() => new Set());
