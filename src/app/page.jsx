@@ -1,17 +1,17 @@
 import { Icon } from "@iconify/react";
 import Image from "next/image";
 import Link from "next/link";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "../components/ui/tooltip";
 import projects from "../data/projects";
 import ContactMenu from "./components/ContactMenu";
 import CopyToClipboardButton from "./components/CopyToClipboardButton";
 import HomeHeaderMenu from "./components/HomeHeaderMenu";
 import HomeTabs from "./components/HomeTabs";
 import PublicChatPanel from "./components/PublicChatPanel";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "../components/ui/tooltip";
 
 export default function Home() {
   const profile = {
@@ -238,7 +238,7 @@ export default function Home() {
           projectsSlot={
             <section>
               <div className="grid grid-cols-3">
-                {projects.map((project) => (
+                {projects.map((project, index) => (
                   <Link
                     key={project.id}
                     href={"/project?id=" + project.id}
@@ -249,6 +249,7 @@ export default function Home() {
                       className="h-full w-full object-cover transition group-hover:scale-[1.03]"
                       width={500}
                       height={500}
+                      priority={index < 3}
                     />
                     <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition group-hover:opacity-100">
                       <div className="flex gap-6 text-sm font-semibold text-white">

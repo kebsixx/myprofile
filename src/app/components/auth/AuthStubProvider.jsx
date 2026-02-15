@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import {
   createContext,
   useCallback,
@@ -8,7 +9,6 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useRouter } from "next/navigation";
 import supabase from "../../../utils/supabase/browserClient";
 
 const STORAGE_KEY_AUTH_USER = "myinsta:auth:user";
@@ -86,13 +86,18 @@ export function AuthStubProvider({ children }) {
           username: username,
         });
 
-        // On explicit sign-in, always send users to home ('/').
-        // Use replace to clean OAuth hash from URL.
-        if (event === "SIGNED_IN") {
-          try {
-            if (typeof window !== "undefined") router.replace("/");
-          } catch (e) {
-            /* ignore router errors */
+        // Only redirect to home after OAuth callback (when URL has hash/code)
+        // Don't redirect on normal session restoration
+        if (event === "SIGNED_IN" && typeof window !== "undefined") {
+          const hasOAuthParams =
+            window.location.hash.includes("access_token") ||
+            window.location.search.includes("code");
+          if (hasOAuthParams) {
+            try {
+              router.replace("/");
+            } catch (e) {
+              /* ignore router errors */
+            }
           }
         }
       } else {
