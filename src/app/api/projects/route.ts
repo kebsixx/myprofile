@@ -1,11 +1,9 @@
 import { TablesInsert, TablesUpdate } from "@/utils/supabase/database.types";
 import { createClient as createServerClient } from "@/utils/supabase/server";
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 async function getSupabase() {
-  const cookieStore = cookies(); // Don't await - server.ts expects the promise
-  return createServerClient(cookieStore);
+  return createServerClient();
 }
 
 async function isAdmin() {

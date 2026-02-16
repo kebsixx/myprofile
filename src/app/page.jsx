@@ -6,14 +6,53 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "../components/ui/tooltip";
-import projects from "../data/projects";
+import { createClient } from "../utils/supabase/server";
 import ContactMenu from "./components/ContactMenu";
 import CopyToClipboardButton from "./components/CopyToClipboardButton";
 import HomeHeaderMenu from "./components/HomeHeaderMenu";
 import HomeTabs from "./components/HomeTabs";
 import PublicChatPanel from "./components/PublicChatPanel";
 
-export default function Home() {
+export default async function Home() {
+  let projects = [];
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("projects")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (!error && data) {
+      projects = data.map((p) => ({
+        id: p.id,
+        title: p.title,
+        imageSrc: p.image_src || "",
+        githubUrl: p.github_url || null,
+        demoUrl: p.demo_url || null,
+        description: p.description || "",
+        date: p.date || null,
+        stats: {
+          likes: p.likes || 0,
+          comments: p.comments_count || 0,
+          reposts: p.reposts || 0,
+          shares: p.shares || 0,
+        },
+      }));
+    }
+  } catch (e) {
+    projects = [];
+  }
+
+  const totalProjects = projects.length;
+  const totalComments = projects.reduce(
+    (sum, p) => sum + (p.stats?.comments || 0),
+    0,
+  );
+  const totalLikes = projects.reduce(
+    (sum, p) => sum + (p.stats?.likes || 0),
+    0,
+  );
+
   const profile = {
     username: "cml6awvx",
     name: "Muhammad Rizieq Anwar",
@@ -33,29 +72,28 @@ export default function Home() {
   const hobbies = [
     {
       label: "Programming",
-      img: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1469&auto=format&fit=crop",
+      img: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=160&h=160&fit=crop",
     },
     {
       label: "Gaming",
-      img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1470&auto=format&fit=crop",
+      img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=160&h=160&fit=crop",
     },
     {
       label: "Olahraga",
-      img: "https://images.unsplash.com/photo-1549476464-37392f717541?q=80&w=687&auto=format&fit=crop",
+      img: "https://images.unsplash.com/photo-1549476464-37392f717541?w=160&h=160&fit=crop",
     },
     {
       label: "Music",
-      img: "https://images.unsplash.com/photo-1675795921263-0781cdbedb64?q=80&w=750&auto=format&fit=crop",
+      img: "https://images.unsplash.com/photo-1675795921263-0781cdbedb64?w=160&h=160&fit=crop",
     },
     {
       label: "Reading",
-      img: "https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?q=80&w=1374&auto=format&fit=crop",
+      img: "https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?w=160&h=160&fit=crop",
     },
   ];
 
   return (
     <div className="min-h-screen bg-black text-white font-inter">
-      {/* Header */}
       <header className="sticky inset-x-0 top-0 z-50 h-16">
         <div className="pointer-events-none inset-0 absolute h-full bg-linear-to-b from-black/75 from-20% via-black/40 via-45% to-black/0 z-8"></div>
         <div className="pointer-events-none inset-0 absolute h-full backdrop-blur-lg fade-to-b z-9"></div>
@@ -71,9 +109,7 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Main */}
       <main className="mx-auto max-w-233.75 pb-10">
-        {/* Mobile */}
         <section className="md:hidden px-4">
           <div className="flex items-start gap-4">
             <div className="h-20 w-20 overflow-hidden rounded-full border border-zinc-200">
@@ -94,15 +130,19 @@ export default function Home() {
 
               <div className="flex justify-start gap-8">
                 <div className="flex flex-col items-start">
-                  <span className="text-base font-semibold">20</span>
+                  <span className="text-base font-semibold">
+                    {totalProjects}
+                  </span>
                   <span className="text-sm text-white">projects</span>
                 </div>
                 <div className="flex flex-col items-start">
-                  <span className="text-base font-semibold">20K</span>
+                  <span className="text-base font-semibold">
+                    {totalComments}
+                  </span>
                   <span className="text-sm text-white">comments</span>
                 </div>
                 <div className="flex flex-col items-start">
-                  <span className="text-base font-semibold">20</span>
+                  <span className="text-base font-semibold">{totalLikes}</span>
                   <span className="text-sm text-white">likes</span>
                 </div>
               </div>
@@ -141,7 +181,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Desktop */}
         <section className="hidden md:flex md:items-start md:gap-20">
           <div className="shrink-0">
             <div className="h-48 w-48 overflow-hidden rounded-full border border-zinc-200">
@@ -181,16 +220,15 @@ export default function Home() {
 
             <div className="mt-5 flex justify-start gap-8">
               <div className="flex items-center gap-1">
-                <span className="text-base font-semibold">20</span>
+                <span className="text-base font-semibold">{totalProjects}</span>
                 <span className="text-base text-white">Projects</span>
               </div>
               <div className="flex items-center gap-1">
-                <span className="text-base font-semibold">50</span>
+                <span className="text-base font-semibold">{totalComments}</span>
                 <span className="text-base text-white">Comments</span>
               </div>
               <div className="flex items-center gap-1">
-                <span className="text-base font-semibold">20</span>
-
+                <span className="text-base font-semibold">{totalLikes}</span>
                 <span className="text-base text-white">Likes</span>
               </div>
             </div>
@@ -209,7 +247,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Hobbies */}
         <section className="mt-6">
           <ul className="no-scrollbar flex gap-5 overflow-x-auto px-4 py-2 md:gap-6 md:px-2">
             {hobbies.map((hobby) => (
@@ -236,50 +273,47 @@ export default function Home() {
 
         <HomeTabs
           projectsSlot={
-            <section>
-              <div className="grid grid-cols-3">
-                {projects.map((project, index) => (
-                  <Link
-                    key={project.id}
-                    href={"/project?id=" + project.id}
-                    className="group relative aspect-square w-full overflow-hidden bg-zinc-100">
-                    <Image
-                      src={project.imageSrc}
-                      alt={project.title}
-                      className="h-full w-full object-cover transition group-hover:scale-[1.03]"
-                      width={500}
-                      height={500}
-                      priority={index < 3}
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition group-hover:opacity-100">
-                      <div className="flex gap-6 text-sm font-semibold text-white">
-                        <span className="inline-flex items-center gap-2">
-                          <Icon
-                            icon="solar:heart-linear"
-                            width="20"
-                            height="20"
-                          />{" "}
-                          {project.stats.likes}
-                        </span>
-                        <span className="inline-flex items-center gap-2">
-                          <Icon
-                            icon="solar:chat-round-outline"
-                            width="20"
-                            height="20"
-                          />{" "}
-                          {project.stats.comments}
-                        </span>
-                      </div>
+            <div className="grid grid-cols-3">
+              {projects.map((project, index) => (
+                <Link
+                  key={project.id}
+                  href={"/project?id=" + project.id}
+                  className="group relative aspect-square w-full overflow-hidden bg-zinc-100">
+                  <Image
+                    src={project.imageSrc}
+                    alt={project.title}
+                    className="h-full w-full object-cover transition group-hover:scale-[1.03]"
+                    width={500}
+                    height={500}
+                    priority={index < 3}
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition group-hover:opacity-100">
+                    <div className="flex gap-6 text-sm font-semibold text-white">
+                      <span className="inline-flex items-center gap-2">
+                        <Icon
+                          icon="solar:heart-linear"
+                          width="20"
+                          height="20"
+                        />{" "}
+                        {project.stats.likes}
+                      </span>
+                      <span className="inline-flex items-center gap-2">
+                        <Icon
+                          icon="solar:chat-round-outline"
+                          width="20"
+                          height="20"
+                        />{" "}
+                        {project.stats.comments}
+                      </span>
                     </div>
-                  </Link>
-                ))}
-              </div>
-            </section>
+                  </div>
+                </Link>
+              ))}
+            </div>
           }
           roomSlot={<PublicChatPanel />}
         />
 
-        {/* Footer */}
         <footer className="mt-14 border-t border-zinc-200 py-6 text-center">
           <p className="text-xs text-zinc-500">
             © 2026 MyInsta. All rights reserved.

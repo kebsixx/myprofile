@@ -8,8 +8,6 @@ import supabase from "../../utils/supabase/browserClient";
 import { useAuthStub } from "../components/auth/AuthStubProvider";
 import ProjectPostMenu from "./ProjectPostMenu";
 
-// shared browser client imported above
-
 function useIsMobileViewport() {
   const [isMobile, setIsMobile] = useState(false);
 
@@ -56,14 +54,12 @@ function formatTime(timestamp) {
 }
 
 export default function ProjectClient({ profile, projects }) {
-  // handle scroll-to via query param (client-only)
   const searchParams = useSearchParams();
   useEffect(() => {
     const scrollId = searchParams?.get("id");
     if (scrollId) {
       const el = document.getElementById(`project-${scrollId}`);
       if (el) {
-        // small timeout to ensure layout is ready
         setTimeout(
           () => el.scrollIntoView({ behavior: "smooth", block: "center" }),
           50,
@@ -78,7 +74,6 @@ export default function ProjectClient({ profile, projects }) {
   const isMobileViewport = useIsMobileViewport();
   const [repostingIds, setRepostingIds] = useState(() => new Set());
 
-  // Comments state
   const [commentsMap, setCommentsMap] = useState({});
   const [newCommentText, setNewCommentText] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -96,7 +91,6 @@ export default function ProjectClient({ profile, projects }) {
         }
       });
       if (Object.keys(out).length > 0) return out;
-      // fallback to toString
       if (typeof err.toString === "function") return err.toString();
       return String(err);
     } catch (e) {
@@ -118,9 +112,7 @@ export default function ProjectClient({ profile, projects }) {
 
   const isSheetOpen = Boolean(activeProject);
 
-  // Fetch comments untuk project yang dibuka
   const fetchComments = useCallback(async (projectId) => {
-    // validate projectId type early to give better feedback
     if (!isUuid(projectId)) {
       const msg =
         "Project ID is not a UUID. Comments are stored by project UUID in the database. If you're using local/sample numeric IDs, either migrate projects to UUIDs in the DB or update the comments schema.";
@@ -136,13 +128,11 @@ export default function ProjectClient({ profile, projects }) {
         .order("created_at", { ascending: false });
 
       if (error) {
-        // log detailed supabase error
         console.error("Supabase fetch error details:", error);
         throw error;
       }
       setCommentsMap((prev) => ({ ...prev, [projectId]: data || [] }));
     } catch (error) {
-      // Try to extract useful fields from error
       try {
         console.error("Error fetching comments:", serializeError(error));
       } catch (e) {
@@ -151,14 +141,12 @@ export default function ProjectClient({ profile, projects }) {
     }
   }, []);
 
-  // Fetch comments saat project dibuka
   useEffect(() => {
     if (openCommentsForId) {
       fetchComments(openCommentsForId);
     }
   }, [openCommentsForId, fetchComments]);
 
-  // Real-time subscription untuk semua projects
   useEffect(() => {
     const channels = projects.map((project) => {
       const channel = supabase
@@ -224,7 +212,6 @@ export default function ProjectClient({ profile, projects }) {
     });
   }
 
-  // Toggle repost state for a project (add/remove projectId from repostingIds)
   function toggleRepost(projectId) {
     setRepostingIds((current) => {
       const next = new Set(current);
@@ -234,7 +221,6 @@ export default function ProjectClient({ profile, projects }) {
     });
   }
 
-  // Submit comment
   const handleSubmitComment = async (e, projectId) => {
     e.preventDefault();
     if (!newCommentText.trim() || !user || submitting) return;
@@ -259,7 +245,6 @@ export default function ProjectClient({ profile, projects }) {
         throw error;
       }
 
-      // append locally for immediate UI feedback
       setCommentsMap((prev) => ({
         ...prev,
         [projectId]: [...(prev[projectId] || []), ...(data || [])],
@@ -268,7 +253,6 @@ export default function ProjectClient({ profile, projects }) {
       setNewCommentText("");
       setCommentError(null);
     } catch (error) {
-      // log detailed fields and show user-friendly message
       try {
         const serialized = serializeError(error);
         console.error("Error posting comment:", serialized);

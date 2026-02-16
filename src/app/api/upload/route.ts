@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import { createClient as createServerClient } from "@/utils/supabase/server";
 
 const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME;
@@ -9,7 +8,7 @@ const CLOUDINARY_UPLOAD_PRESET = process.env.CLOUDINARY_UPLOAD_PRESET;
 
 async function isAdmin() {
   try {
-    const supabase = createServerClient(cookies());
+    const supabase = await createServerClient();
     const { data: sessionData } = await supabase.auth.getSession();
     const session = sessionData?.session;
     if (!session) return false;

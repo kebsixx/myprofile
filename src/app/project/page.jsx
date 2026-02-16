@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { Suspense } from "react";
-import projects from "../../data/projects";
+import { createClient } from "../../utils/supabase/server";
 import ProjectClient from "./ProjectClient";
 
 const profile = {
@@ -9,12 +9,39 @@ const profile = {
   avatarSrc: "/img/profil.jpg",
 };
 
-export default function ProjectPage() {
+export default async function ProjectPage() {
+  let projects = [];
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("projects")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (!error && data) {
+      projects = data.map((p) => ({
+        id: p.id,
+        title: p.title,
+        imageSrc: p.image_src || "",
+        githubUrl: p.github_url || null,
+        demoUrl: p.demo_url || null,
+        description: p.description || "",
+        date: p.date || null,
+        stats: {
+          likes: p.likes || 0,
+          comments: p.comments_count || 0,
+          reposts: p.reposts || 0,
+          shares: p.shares || 0,
+        },
+      }));
+    }
+  } catch (e) {
+    projects = [];
+  }
+
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Header */}
       <header className="sticky inset-x-0 top-0 z-50 h-16">
-        {/* <div className="pointer-events-none inset-0 absolute h-full bg-linear-to-b from-black/75 from-50% via-black/40 via-70% to-black/0"></div> */}
         <div className="pointer-events-none inset-0 absolute h-full bg-linear-to-b from-black/75 from-20% via-black/40 via-45% to-black/0 z-8"></div>
         <div className="pointer-events-none inset-0 absolute h-full backdrop-blur-lg fade-to-b z-9"></div>
         <div className="relative h-full z-10">
@@ -31,13 +58,6 @@ export default function ProjectPage() {
           </div>
         </div>
       </header>
-      {/*
-        Cara kerja:
-        - Di halaman Home, link ke /project?id=p2 (misal)
-        - Di halaman Project, ambil id dari query string
-        - Saat komponen mount, scroll ke elemen dengan id "project-p2"
-        - Pastikan setiap section project punya id="project-<id>"
-      */}
       <Suspense
         fallback={
           <div className="flex justify-center py-8">
