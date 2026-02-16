@@ -1,17 +1,14 @@
 import { Icon } from "@iconify/react";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "../components/ui/tooltip";
 import { createClient } from "../utils/supabase/server";
 import ContactMenu from "./components/ContactMenu";
 import CopyToClipboardButton from "./components/CopyToClipboardButton";
+import FollowButton from "./components/FollowButton";
 import HomeHeaderMenu from "./components/HomeHeaderMenu";
 import HomeTabs from "./components/HomeTabs";
 import PublicChatPanel from "./components/PublicChatPanel";
+import UsernameTooltip from "./components/UsernameTooltip";
 
 export default async function Home() {
   let projects = [];
@@ -54,16 +51,11 @@ export default async function Home() {
   );
 
   const profile = {
-    username: "cml6awvx",
+    username: "nvevam",
     name: "Muhammad Rizieq Anwar",
     title: "Developer",
-    description: (
-      <>
-        Mahasiswa Teknik Informatika Politeknik Elektronika Negeri Surabaya.
-        <br />
-        Part of <span className="font-semibold">@softdevpens</span>
-      </>
-    ),
+    description:
+      "Informatics Engineering student at Politeknik Elektronika Negeri Surabaya.",
     email: "zieqanw@outlook.com",
     link: "https://github.com/kebsixx",
     avatarSrc: "/img/profil.jpg",
@@ -79,7 +71,7 @@ export default async function Home() {
       img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=160&h=160&fit=crop",
     },
     {
-      label: "Olahraga",
+      label: "Sports",
       img: "https://images.unsplash.com/photo-1549476464-37392f717541?w=160&h=160&fit=crop",
     },
     {
@@ -100,7 +92,7 @@ export default async function Home() {
         <div className="relative h-full z-10">
           <div className="relative mx-auto flex h-full w-full max-w-243.75 items-center justify-between px-4">
             <h1 className="text-xl font-bold tracking-tight">
-              {profile.username}
+              <UsernameTooltip username={profile.username} />
             </h1>
             <div className="flex items-center gap-2">
               <HomeHeaderMenu githubUrl={profile.link} />
@@ -164,14 +156,7 @@ export default async function Home() {
           </div>
 
           <div className="mt-4 flex gap-2">
-            <a
-              href="https://www.instagram.com/cml6awvx/"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex flex-1 gap-2 items-center justify-center rounded-lg bg-indigo-500 px-1 py-2 text-sm font-semibold text-white transition hover:bg-indigo-600">
-              <Icon icon="mdi:instagram" width="20" height="20" />
-              Follow
-            </a>
+            <FollowButton className="inline-flex flex-1 gap-2 items-center justify-center rounded-lg bg-indigo-500 px-1 py-2 text-sm font-semibold text-white transition hover:bg-indigo-600" />
             <ContactMenu
               label="Messages"
               iconClassName="w-5 h-5"
@@ -197,23 +182,12 @@ export default async function Home() {
 
           <div className="flex-1">
             <div className="flex flex-wrap items-center gap-3">
-              <h2 className="text-xl font-normal">{profile.username}</h2>
+              <h2 className="text-xl font-normal">
+                <UsernameTooltip username={profile.username} />
+              </h2>
 
               <div className="ml-1 flex flex-wrap items-center gap-2">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <a
-                      href="https://www.instagram.com/cml6awvx/"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center justify-center rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-600">
-                      Follow
-                    </a>
-                  </TooltipTrigger>
-                  <TooltipContent side="top" align="center">
-                    Follow me on Instagram
-                  </TooltipContent>
-                </Tooltip>
+                <FollowButton />
                 <ContactMenu label="Messages" />
               </div>
             </div>
@@ -316,7 +290,7 @@ export default async function Home() {
 
         <footer className="mt-14 border-t border-zinc-200 py-6 text-center">
           <p className="text-xs text-zinc-500">
-            © 2026 MyInsta. All rights reserved.
+            © 2026 nvevam. All rights reserved.
           </p>
         </footer>
       </main>

@@ -19,9 +19,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "My Profile",
+  title: "nvevam - Developer Portfolio",
   description:
-    "Combination of Instagram dan Telegram UI for showcasing my projects and contact info.",
+    "Combination of Instagram and Telegram UI for showcasing my projects and contact info.",
 };
 
 export default function RootLayout({ children }) {

@@ -182,6 +182,30 @@ export type Database = {
         }
         Relationships: []
       }
+      public_chat_messages: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          nickname: string
+          user_id: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          nickname: string
+          user_id?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          nickname?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

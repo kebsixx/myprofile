@@ -5,7 +5,7 @@ import { createClient } from "../../utils/supabase/server";
 import ProjectClient from "./ProjectClient";
 
 const profile = {
-  username: "cml6awvx",
+  username: "nvevam",
   avatarSrc: "/img/profil.jpg",
 };
 

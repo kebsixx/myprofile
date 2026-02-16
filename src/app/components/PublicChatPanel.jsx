@@ -3,11 +3,10 @@
 import { Icon } from "@iconify/react";
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import supabase from "../../utils/supabase/browserClient";
 import ChatComposer from "./ChatComposer";
 import AuthStubInline from "./auth/AuthStubInline";
 import { useAuthStub } from "./auth/AuthStubProvider";
-
-const STORAGE_KEY_MESSAGES = "myinsta:publicChat:messages";
 
 function formatTime(ts) {
   try {
@@ -27,9 +26,9 @@ export default function PublicChatPanel({
 
   const [messages, setMessages] = useState([]);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
   const scrollRef = useRef(null);
 
-  // Prioritaskan user.username jika ada (tidak peduli provider), baru fallback ke handle
   const nickname = user?.username
     ? user.username.trim()
     : (handle || "").trim();
@@ -43,39 +42,70 @@ export default function PublicChatPanel({
   }, []);
 
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY_MESSAGES);
-      if (saved) setMessages(JSON.parse(saved));
-    } catch {
-      // ignore
-    }
-  }, []);
+    const fetchMessages = async () => {
+      const { data, error } = await supabase
+        .from("public_chat_messages")
+        .select("*")
+        .order("created_at", { ascending: true })
+        .limit(100);
+
+      if (!error && data) {
+        setMessages(data);
+        scrollToBottom();
+      }
+      setLoading(false);
+    };
+    fetchMessages();
+  }, [scrollToBottom]);
 
   useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY_MESSAGES, JSON.stringify(messages));
-    } catch {
-      // ignore
-    }
-  }, [messages]);
+    const channel = supabase
+      .channel("public-chat")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "public_chat_messages",
+        },
+        (payload) => {
+          setMessages((prev) => [...prev, payload.new]);
+          scrollToBottom();
+        },
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "DELETE",
+          schema: "public",
+          table: "public_chat_messages",
+        },
+        (payload) => {
+          setMessages((prev) => prev.filter((m) => m.id !== payload.old.id));
+        },
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [scrollToBottom]);
 
   const sendMessage = useCallback(
-    (text) => {
-      if (!canChat) return;
-      const name = nickname;
-      if (!name) return;
+    async (text) => {
+      if (!canChat || !user) return;
 
-      const newMessage = {
-        id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
-        name,
-        text,
-        ts: Date.now(),
-      };
+      const { error } = await supabase.from("public_chat_messages").insert({
+        user_id: user.id,
+        nickname: nickname,
+        content: text,
+      });
 
-      setMessages((prev) => [...prev, newMessage]);
-      scrollToBottom();
+      if (error) {
+        console.error("Error sending message:", error);
+      }
     },
-    [canChat, nickname, scrollToBottom],
+    [canChat, nickname, user],
   );
 
   const requestAuth = useCallback(() => {
@@ -89,7 +119,7 @@ export default function PublicChatPanel({
 
   const renderedMessages = useMemo(() => {
     return messages.map((m) => {
-      const mine = nickname && m.name === nickname;
+      const mine = nickname && m.nickname === nickname;
 
       return (
         <div
@@ -104,11 +134,15 @@ export default function PublicChatPanel({
                 : "max-w-[85%] rounded-2xl rounded-bl-none bg-zinc-800/60 ring-1 ring-white/10 px-3 py-2"
             }>
             <div className="flex items-baseline justify-between gap-3">
-              <p className="text-xs font-semibold text-white/90">{m.name}</p>
-              <p className="text-[10px] text-white/40">{formatTime(m.ts)}</p>
+              <p className="text-xs font-semibold text-white/90">
+                {m.nickname}
+              </p>
+              <p className="text-[10px] text-white/40">
+                {formatTime(m.created_at)}
+              </p>
             </div>
             <p className="mt-1 text-sm text-white/85 whitespace-pre-wrap wrap-break-word">
-              {m.text}
+              {m.content}
             </p>
           </div>
         </div>
@@ -173,7 +207,11 @@ export default function PublicChatPanel({
             <div className="absolute inset-0 bg-black/25" />
           </div>
           <div className="relative z-10">
-            {messages.length === 0 ? (
+            {loading ? (
+              <div className="flex justify-center py-4">
+                <div className="h-6 w-6 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+              </div>
+            ) : messages.length === 0 ? (
               <p className="text-center text-sm text-white/40">
                 No messages yet. Say hi 👋
               </p>

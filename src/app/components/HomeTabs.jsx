@@ -43,7 +43,8 @@ export default function HomeTabs({ projectsSlot, roomSlot }) {
 
         <button
           type="button"
-          className="flex items-center justify-center gap-2 border-b border-transparent py-4 text-xs font-semibold tracking-widest text-zinc-500 hover:text-white hover:border-white">
+          disabled
+          className="flex items-center justify-center gap-2 border-b border-transparent py-4 text-xs font-semibold tracking-widest text-zinc-700 cursor-not-allowed opacity-50">
           <Icon icon="solar:medal-ribbon-star-linear" width="20" height="20" />
           <span className="hidden md:block">Achievements</span>
         </button>
