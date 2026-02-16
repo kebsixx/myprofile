@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { useRouter } from "next/navigation";
@@ -35,6 +36,7 @@ const AuthStubContext = createContext(null);
 export function AuthStubProvider({ children }) {
   const [user, setUser] = useState(null);
   const router = useRouter();
+  const isInitialEventRef = useRef(true);
 
   // Listen ke Supabase auth state changes
   useEffect(() => {
@@ -86,14 +88,18 @@ export function AuthStubProvider({ children }) {
           username: username,
         });
 
-        // On explicit sign-in, always send users to home ('/').
-        // Use replace to clean OAuth hash from URL.
-        if (event === "SIGNED_IN") {
+        // Only redirect on a genuine NEW sign-in, not on initial
+        // session restoration (which also fires SIGNED_IN).
+        if (event === "SIGNED_IN" && !isInitialEventRef.current) {
           try {
             if (typeof window !== "undefined") router.replace("/");
           } catch (e) {
             /* ignore router errors */
           }
+        }
+        // Mark initial event as handled
+        if (isInitialEventRef.current) {
+          isInitialEventRef.current = false;
         }
       } else {
         setUser(null);
