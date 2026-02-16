@@ -1,9 +1,6 @@
-"use client";
-
 import { Icon } from "@iconify/react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { Suspense } from "react";
 import projects from "../../data/projects";
 import ProjectClient from "./ProjectClient";
 
@@ -13,18 +10,6 @@ const profile = {
 };
 
 export default function ProjectPage() {
-  const searchParams = useSearchParams();
-  const scrollId = searchParams.get("id");
-
-  useEffect(() => {
-    if (scrollId) {
-      const el = document.getElementById(`project-${scrollId}`);
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
-    }
-  }, [scrollId]);
-
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Header */}
@@ -53,7 +38,14 @@ export default function ProjectPage() {
         - Saat komponen mount, scroll ke elemen dengan id "project-p2"
         - Pastikan setiap section project punya id="project-<id>"
       */}
-      <ProjectClient profile={profile} projects={projects} />
+      <Suspense
+        fallback={
+          <div className="flex justify-center py-8">
+            <div className="animate-spin h-8 w-8 border-2 border-white border-t-transparent rounded-full" />
+          </div>
+        }>
+        <ProjectClient profile={profile} projects={projects} />
+      </Suspense>
     </div>
   );
 }

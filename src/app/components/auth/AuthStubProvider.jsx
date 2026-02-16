@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import {
   createContext,
   useCallback,
@@ -9,7 +10,6 @@ import {
   useRef,
   useState,
 } from "react";
-import { useRouter } from "next/navigation";
 import supabase from "../../../utils/supabase/browserClient";
 
 const STORAGE_KEY_AUTH_USER = "myinsta:auth:user";
@@ -88,15 +88,22 @@ export function AuthStubProvider({ children }) {
           username: username,
         });
 
-        // Only redirect on a genuine NEW sign-in, not on initial
-        // session restoration (which also fires SIGNED_IN).
-        if (event === "SIGNED_IN" && !isInitialEventRef.current) {
-          try {
-            if (typeof window !== "undefined") router.replace("/");
-          } catch (e) {
-            /* ignore router errors */
+        // Redirect to home only for genuine new sign-ins or when
+        // OAuth callback params are present in the URL. Do not
+        // redirect when the session is restored on page load.
+        if (event === "SIGNED_IN") {
+          const hasOAuthParams =
+            typeof window !== "undefined" &&
+            (window.location.hash.includes("access_token") || window.location.search.includes("code"));
+          if (!isInitialEventRef.current || hasOAuthParams) {
+            try {
+              if (typeof window !== "undefined") router.replace("/");
+            } catch (e) {
+              /* ignore router errors */
+            }
           }
         }
+
         // Mark initial event as handled
         if (isInitialEventRef.current) {
           isInitialEventRef.current = false;
