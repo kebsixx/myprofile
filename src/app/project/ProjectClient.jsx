@@ -71,7 +71,19 @@ export default function ProjectClient({ profile, projects }) {
   const { user, isAuthed } = useAuthStub();
   const [openCommentsForId, setOpenCommentsForId] = useState(null);
   const [likedIds, setLikedIds] = useState(() => new Set());
+  const [likesCount, setLikesCount] = useState(() => {
+    const map = {};
+    projects.forEach((p) => (map[p.id] = p.stats?.likes || 0));
+    return map;
+  });
+  const [likingIds, setLikingIds] = useState(() => new Set());
   const isMobileViewport = useIsMobileViewport();
+  const [repostedIds, setRepostedIds] = useState(() => new Set());
+  const [repostsCount, setRepostsCount] = useState(() => {
+    const map = {};
+    projects.forEach((p) => (map[p.id] = p.stats?.reposts || 0));
+    return map;
+  });
   const [repostingIds, setRepostingIds] = useState(() => new Set());
 
   const [commentsMap, setCommentsMap] = useState({});
@@ -148,6 +160,34 @@ export default function ProjectClient({ profile, projects }) {
   }, [openCommentsForId, fetchComments]);
 
   useEffect(() => {
+    if (!user) {
+      setLikedIds(new Set());
+      setRepostedIds(new Set());
+      return;
+    }
+    const fetchUserLikes = async () => {
+      const { data } = await supabase
+        .from("project_likes")
+        .select("project_id")
+        .eq("user_id", user.id);
+      if (data) {
+        setLikedIds(new Set(data.map((l) => l.project_id)));
+      }
+    };
+    const fetchUserReposts = async () => {
+      const { data } = await supabase
+        .from("project_reposts")
+        .select("project_id")
+        .eq("user_id", user.id);
+      if (data) {
+        setRepostedIds(new Set(data.map((r) => r.project_id)));
+      }
+    };
+    fetchUserLikes();
+    fetchUserReposts();
+  }, [user]);
+
+  useEffect(() => {
     const channels = projects.map((project) => {
       const channel = supabase
         .channel(`project-comments-${project.id}`)
@@ -203,22 +243,106 @@ export default function ProjectClient({ profile, projects }) {
     setOpenCommentsForId(null);
   }
 
-  function toggleLike(projectId) {
+  async function toggleLike(projectId) {
+    if (!user || likingIds.has(projectId)) return;
+
+    setLikingIds((prev) => new Set(prev).add(projectId));
+    const isCurrentlyLiked = likedIds.has(projectId);
+
     setLikedIds((current) => {
       const next = new Set(current);
-      if (next.has(projectId)) next.delete(projectId);
+      if (isCurrentlyLiked) next.delete(projectId);
       else next.add(projectId);
       return next;
     });
+    setLikesCount((prev) => ({
+      ...prev,
+      [projectId]: (prev[projectId] || 0) + (isCurrentlyLiked ? -1 : 1),
+    }));
+
+    try {
+      if (isCurrentlyLiked) {
+        await supabase
+          .from("project_likes")
+          .delete()
+          .eq("project_id", projectId)
+          .eq("user_id", user.id);
+      } else {
+        await supabase.from("project_likes").insert({
+          project_id: projectId,
+          user_id: user.id,
+        });
+      }
+    } catch (error) {
+      setLikedIds((current) => {
+        const next = new Set(current);
+        if (isCurrentlyLiked) next.add(projectId);
+        else next.delete(projectId);
+        return next;
+      });
+      setLikesCount((prev) => ({
+        ...prev,
+        [projectId]: (prev[projectId] || 0) + (isCurrentlyLiked ? 1 : -1),
+      }));
+      console.error("Error toggling like:", error);
+    } finally {
+      setLikingIds((prev) => {
+        const next = new Set(prev);
+        next.delete(projectId);
+        return next;
+      });
+    }
   }
 
-  function toggleRepost(projectId) {
-    setRepostingIds((current) => {
+  async function toggleRepost(projectId) {
+    if (!user || repostingIds.has(projectId)) return;
+
+    setRepostingIds((prev) => new Set(prev).add(projectId));
+    const isCurrentlyReposted = repostedIds.has(projectId);
+
+    setRepostedIds((current) => {
       const next = new Set(current);
-      if (next.has(projectId)) next.delete(projectId);
+      if (isCurrentlyReposted) next.delete(projectId);
       else next.add(projectId);
       return next;
     });
+    setRepostsCount((prev) => ({
+      ...prev,
+      [projectId]: (prev[projectId] || 0) + (isCurrentlyReposted ? -1 : 1),
+    }));
+
+    try {
+      if (isCurrentlyReposted) {
+        await supabase
+          .from("project_reposts")
+          .delete()
+          .eq("project_id", projectId)
+          .eq("user_id", user.id);
+      } else {
+        await supabase.from("project_reposts").insert({
+          project_id: projectId,
+          user_id: user.id,
+        });
+      }
+    } catch (error) {
+      setRepostedIds((current) => {
+        const next = new Set(current);
+        if (isCurrentlyReposted) next.add(projectId);
+        else next.delete(projectId);
+        return next;
+      });
+      setRepostsCount((prev) => ({
+        ...prev,
+        [projectId]: (prev[projectId] || 0) + (isCurrentlyReposted ? 1 : -1),
+      }));
+      console.error("Error toggling repost:", error);
+    } finally {
+      setRepostingIds((prev) => {
+        const next = new Set(prev);
+        next.delete(projectId);
+        return next;
+      });
+    }
   }
 
   const handleSubmitComment = async (e, projectId) => {
@@ -273,7 +397,8 @@ export default function ProjectClient({ profile, projects }) {
       {projects.map((project, index) => {
         const isOpen = openCommentsForId === project.id;
         const isLiked = likedIds.has(project.id);
-        const isReposting = repostingIds.has(project.id);
+        const isReposted = repostedIds.has(project.id);
+        const isRepostingInProgress = repostingIds.has(project.id);
         const projectAnchorId = `project-${project.id}`;
         const projectComments = commentsMap[project.id] || [];
 
@@ -339,10 +464,11 @@ export default function ProjectClient({ profile, projects }) {
                       <button
                         type="button"
                         onClick={() => toggleLike(project.id)}
+                        disabled={!user || likingIds.has(project.id)}
                         aria-label="Like"
                         className={
-                          "flex items-center gap-1 rounded-full px-2 py-1.5 hover:bg-white/10 " +
-                          (isLiked ? "bg-white/10" : "")
+                          "flex items-center gap-1 rounded-full px-2 py-1.5 hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed " +
+                          (isLiked ? "bg-white/10 text-red-400" : "")
                         }>
                         <Icon
                           icon={
@@ -352,7 +478,7 @@ export default function ProjectClient({ profile, projects }) {
                           height="24"
                         />
                         <p className="text-sm font-semibold max-[400px]:text-xs">
-                          {formatCount(project.stats.likes)}
+                          {formatCount(likesCount[project.id] || 0)}
                         </p>
                       </button>
 
@@ -382,10 +508,14 @@ export default function ProjectClient({ profile, projects }) {
                         type="button"
                         aria-label="Repost"
                         onClick={() => toggleRepost(project.id)}
-                        className="flex items-center gap-1 rounded-full px-2 py-1.5 hover:bg-white/10">
+                        disabled={!user || isRepostingInProgress}
+                        className={
+                          "flex items-center gap-1 rounded-full px-2 py-1.5 hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed " +
+                          (isReposted ? "bg-white/10 text-green-400" : "")
+                        }>
                         <Icon
                           icon={
-                            isReposting
+                            isReposted
                               ? "solar:repeat-one-minimalistic-bold"
                               : "solar:repeat-linear"
                           }
@@ -393,20 +523,7 @@ export default function ProjectClient({ profile, projects }) {
                           height="24"
                         />
                         <p className="text-sm font-semibold max-[400px]:text-xs">
-                          {formatCount(project.stats.reposts)}
-                        </p>
-                      </button>
-                      <button
-                        type="button"
-                        aria-label="Share"
-                        className="flex items-center gap-1 rounded-full px-2 py-1.5 hover:bg-white/10">
-                        <Icon
-                          icon="solar:plain-3-linear"
-                          width="24"
-                          height="24"
-                        />
-                        <p className="text-sm font-semibold max-[400px]:text-xs">
-                          {formatCount(project.stats.shares)}
+                          {formatCount(repostsCount[project.id] || 0)}
                         </p>
                       </button>
                     </div>

@@ -79,6 +79,64 @@ export type Database = {
           },
         ]
       }
+      project_likes: {
+        Row: {
+          created_at: string | null
+          id: string
+          project_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          project_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          project_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_likes_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      project_reposts: {
+        Row: {
+          created_at: string | null
+          id: string
+          project_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          project_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          project_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_reposts_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       projects: {
         Row: {
           comments: Json | null
@@ -92,7 +150,6 @@ export type Database = {
           image_src: string | null
           likes: number | null
           reposts: number | null
-          shares: number | null
           title: string
         }
         Insert: {
@@ -107,7 +164,6 @@ export type Database = {
           image_src?: string | null
           likes?: number | null
           reposts?: number | null
-          shares?: number | null
           title: string
         }
         Update: {
@@ -122,7 +178,6 @@ export type Database = {
           image_src?: string | null
           likes?: number | null
           reposts?: number | null
-          shares?: number | null
           title?: string
         }
         Relationships: []
