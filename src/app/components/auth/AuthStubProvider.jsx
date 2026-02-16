@@ -94,7 +94,8 @@ export function AuthStubProvider({ children }) {
         if (event === "SIGNED_IN") {
           const hasOAuthParams =
             typeof window !== "undefined" &&
-            (window.location.hash.includes("access_token") || window.location.search.includes("code"));
+            (window.location.hash.includes("access_token") ||
+              window.location.search.includes("code"));
           if (!isInitialEventRef.current || hasOAuthParams) {
             try {
               if (typeof window !== "undefined") router.replace("/");
