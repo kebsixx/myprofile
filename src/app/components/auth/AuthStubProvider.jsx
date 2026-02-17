@@ -118,10 +118,12 @@ export function AuthStubProvider({ children }) {
 
   // Login dengan email (magic link)
   const signInEmail = useCallback(async (email) => {
+    const redirectBase =
+      process.env.NEXT_PUBLIC_BASE_URL || window.location.origin;
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: `${window.location.origin}/`,
+        emailRedirectTo: `${redirectBase}/`,
       },
     });
     if (error) {
@@ -134,10 +136,12 @@ export function AuthStubProvider({ children }) {
 
   // Login dengan Google
   const signInGoogle = useCallback(async () => {
+    const redirectBase =
+      process.env.NEXT_PUBLIC_BASE_URL || window.location.origin;
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/`,
+        redirectTo: `${redirectBase}/`,
       },
     });
     if (error) {
@@ -149,10 +153,12 @@ export function AuthStubProvider({ children }) {
 
   // Login dengan GitHub
   const signInGithub = useCallback(async () => {
+    const redirectBase =
+      process.env.NEXT_PUBLIC_BASE_URL || window.location.origin;
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "github",
       options: {
-        redirectTo: `${window.location.origin}/`,
+        redirectTo: `${redirectBase}/`,
         skipBrowserRedirect: false,
       },
     });
