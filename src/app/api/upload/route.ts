@@ -76,7 +76,11 @@ export async function POST(req: NextRequest) {
     const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
     const transformation = "c_limit,w_1200,q_auto,f_auto";
 
-    const useUnsigned = Boolean(CLOUDINARY_UPLOAD_PRESET);
+    const hasSignedCredentials = Boolean(
+      CLOUDINARY_API_KEY && CLOUDINARY_API_SECRET,
+    );
+    const useUnsigned =
+      Boolean(CLOUDINARY_UPLOAD_PRESET) && !hasSignedCredentials;
     let uploadFormData = new FormData();
 
     if (useUnsigned) {
@@ -119,9 +123,59 @@ export async function POST(req: NextRequest) {
 
     if (!uploadResponse.ok) {
       const errorData = await uploadResponse.text();
+
+      if (!useUnsigned && CLOUDINARY_UPLOAD_PRESET) {
+        const retryFormData = new FormData();
+        retryFormData.append("file", dataUri);
+        retryFormData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+        retryFormData.append("folder", "projects");
+
+        const retryResponse = await fetch(cloudinaryUrl, {
+          method: "POST",
+          body: retryFormData,
+        });
+
+        if (retryResponse.ok) {
+          const retryResult = await retryResponse.json();
+          const retryOriginalUrl = retryResult.secure_url as string;
+          const retryTransformedUrl = retryOriginalUrl.replace(
+            "/image/upload/",
+            `/image/upload/${transformation}/`,
+          );
+
+          return NextResponse.json({
+            url: retryTransformedUrl,
+            originalUrl: retryOriginalUrl,
+            public_id: retryResult.public_id,
+            width: retryResult.width,
+            height: retryResult.height,
+            mode: "unsigned-fallback",
+          });
+        }
+
+        const retryErrorData = await retryResponse.text();
+        console.error("Cloudinary upload error (signed):", errorData);
+        console.error(
+          "Cloudinary upload error (unsigned fallback):",
+          retryErrorData,
+        );
+        return NextResponse.json(
+          {
+            error: "Upload failed",
+            details: `signed: ${errorData} | unsigned: ${retryErrorData}`,
+            mode: "signed-with-unsigned-fallback",
+          },
+          { status: 500 },
+        );
+      }
+
       console.error("Cloudinary upload error:", errorData);
       return NextResponse.json(
-        { error: "Upload failed", details: errorData },
+        {
+          error: "Upload failed",
+          details: errorData,
+          mode: useUnsigned ? "unsigned" : "signed",
+        },
         { status: 500 },
       );
     }

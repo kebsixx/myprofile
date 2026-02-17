@@ -159,7 +159,13 @@ export default function AdminClient() {
       const result = await res.json();
 
       if (!res.ok) {
-        throw new Error(result.error || "Upload failed");
+        const details =
+          typeof result?.details === "string" && result.details.trim()
+            ? ` - ${result.details}`
+            : "";
+        throw new Error(
+          `${result.error || `Upload failed (HTTP ${res.status})`}${details}`,
+        );
       }
 
       setFormData((prev) => ({ ...prev, image_src: result.url }));

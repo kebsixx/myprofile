@@ -88,15 +88,14 @@ export function AuthStubProvider({ children }) {
           username: username,
         });
 
-        // Redirect to home only for genuine new sign-ins or when
-        // OAuth callback params are present in the URL. Do not
-        // redirect when the session is restored on page load.
+        // Redirect to home only when OAuth callback params are present.
+        // This prevents unexpected navigation (e.g. leaving tab and coming back).
         if (event === "SIGNED_IN") {
           const hasOAuthParams =
             typeof window !== "undefined" &&
             (window.location.hash.includes("access_token") ||
               window.location.search.includes("code"));
-          if (!isInitialEventRef.current || hasOAuthParams) {
+          if (hasOAuthParams) {
             try {
               if (typeof window !== "undefined") router.replace("/");
             } catch (e) {
