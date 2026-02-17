@@ -1,6 +1,7 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Card,
   CardContent,
@@ -20,6 +21,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
   Table,
   TableBody,
   TableCell,
@@ -33,7 +39,10 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 import {
+  CalendarIcon,
   ImageIcon,
   Loader2,
   Pencil,
@@ -359,14 +368,38 @@ export default function AdminClient() {
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="date">Date (optional)</Label>
-                  <Input
-                    id="date"
-                    type="date"
-                    value={formData.date}
-                    onChange={(e) =>
-                      setFormData({ ...formData, date: e.target.value })
-                    }
-                  />
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-left font-normal",
+                          !formData.date && "text-muted-foreground",
+                        )}>
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {formData.date ? (
+                          format(new Date(formData.date), "PPP")
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={
+                          formData.date ? new Date(formData.date) : undefined
+                        }
+                        onSelect={(date) =>
+                          setFormData({
+                            ...formData,
+                            date: date ? format(date, "yyyy-MM-dd") : "",
+                          })
+                        }
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
                 <div className="grid gap-2">
                   <Label>Project Image</Label>

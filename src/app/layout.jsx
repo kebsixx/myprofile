@@ -1,6 +1,7 @@
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import { AuthStubProvider } from "./components/auth/AuthStubProvider";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const inter = Inter({
@@ -32,6 +33,7 @@ export default function RootLayout({ children }) {
         <AuthStubProvider>
           <TooltipProvider>{children}</TooltipProvider>
         </AuthStubProvider>
+        <Analytics />
       </body>
     </html>
   );
